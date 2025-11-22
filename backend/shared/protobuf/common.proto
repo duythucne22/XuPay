@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package fintech.common;
+option go_package = "github.com/fintech/shared/proto/gen/go/common";
+option java_package = "com.fintech.shared.proto.common";
+option java_outer_classname = "CommonProto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// Standard response wrapper
+message ApiResponse {
+  bool success = 1;
+  string message = 2;
+  string error_code = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  string trace_id = 5;
+}
+
+// Pagination
+message PaginationRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message PaginationResponse {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 total_count = 3;
+  int32 total_pages = 4;
+}
+
+// Standard error details
+message ErrorDetails {
+  string field = 1;
+  string message = 2;
+  string code = 3;
+}

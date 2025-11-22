@@ -1,0 +1,60 @@
+syntax = "proto3";
+package fintech.user;
+option go_package = "github.com/fintech/shared/proto/gen/go/user";
+option java_package = "com.fintech.shared.proto.user";
+option java_outer_classname = "UserProto";
+import "google/protobuf/timestamp.proto";
+// User entity
+message User {
+  string user_id = 1;
+  string email = 2;
+  string phone = 3;
+  string first_name = 4;
+  string last_name = 5;
+  UserStatus status = 6;
+  UserKYCStatus kyc_status = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+enum UserStatus {
+  UNKNOWN = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  SUSPENDED = 3;
+  DELETED = 4;
+}
+enum UserKYCStatus {
+  KYC_UNKNOWN = 0;
+  KYC_PENDING = 1;
+  KYC_VERIFIED = 2;
+  KYC_REJECTED = 3;
+}
+// User service requests/responses
+message ValidateCredentialsRequest {
+  string email = 1;
+  string password = 2;
+}
+message ValidateCredentialsResponse {
+  bool valid = 1;
+  User user = 2;
+  string error = 3;
+}
+message GetUserProfileRequest {
+  string user_id = 1;
+}
+message GetUserProfileResponse {
+  User user = 1;
+  repeated PaymentMethod payment_methods = 2;
+}
+message PaymentMethod {
+  string method_id = 1;
+  string type = 2;  // CARD, BANK_ACCOUNT, WALLET
+  bool is_default = 3;
+  string masked_value = 4;
+}
+service UserService {
+  rpc ValidateCredentials(ValidateCredentialsRequest) returns (ValidateCredentialsResponse);
+  rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+  rpc CreateUser(User) returns (User);
+  rpc UpdateUser(User) returns (User);
+}

@@ -1,0 +1,46 @@
+syntax = "proto3";
+package fintech.partner;
+option go_package = "github.com/fintech/shared/proto/gen/go/partner";
+option java_package = "com.fintech.shared.proto.partner";
+option java_outer_classname = "PartnerProto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+// Partner/BaaS entity
+message Partner {
+  string partner_id = 1;
+  string company_name = 2;
+  string api_key_hash = 3;  // Never send actual key in proto
+  PartnerStatus status = 4;
+  int32 rate_limit_per_minute = 5;
+  repeated string ip_whitelist = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+enum PartnerStatus {
+  UNKNOWN = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  SUSPENDED = 3;
+  ONBOARDING = 4;
+}
+message ValidatePartnerRequest {
+  string api_key = 1;
+  string ip_address = 2;
+}
+message ValidatePartnerResponse {
+  bool valid = 1;
+  Partner partner = 2;
+  string error = 3;
+}
+message LogAPIUsageRequest {
+  string partner_id = 1;
+  string endpoint = 2;
+  string method = 3;
+  int32 response_code = 4;
+  int64 response_time_ms = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+service PartnerService {
+  rpc ValidatePartner(ValidatePartnerRequest) returns (ValidatePartnerResponse);
+  rpc LogAPIUsage(LogAPIUsageRequest) returns (google.protobuf.Empty);
+}
