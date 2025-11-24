@@ -1,1 +1,8 @@
 go 1.25.4
+
+use (
+	./fraud-service
+	./payment-service
+	./settlement-service
+	./shared-utils
+)
