@@ -1,0 +1,154 @@
+version: '3.9'
+services:
+  # ============================================
+  # SEPARATE DATABASES FOR EACH SERVICE
+  # ============================================
+  
+  postgres-user:
+    image: postgres:15-alpine
+    container_name: fintech-user-db
+    environment:
+      POSTGRES_USER: user_service
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD:-user-dev-password}
+      POSTGRES_DB: user_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/user-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_service -d user_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-payment:
+    image: postgres:15-alpine
+    container_name: fintech-payment-db
+    environment:
+      POSTGRES_USER: payment_service
+      POSTGRES_PASSWORD: ${PAYMENT_DB_PASSWORD:-payment-dev-password}
+      POSTGRES_DB: payment_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/payment-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payment_service -d payment_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-fraud:
+    image: postgres:15-alpine
+    container_name: fintech-fraud-db
+    environment:
+      POSTGRES_USER: fraud_service
+      POSTGRES_PASSWORD: ${FRAUD_DB_PASSWORD:-fraud-dev-password}
+      POSTGRES_DB: fraud_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - fraud_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/fraud-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fraud_service -d fraud_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-audit:
+    image: postgres:15-alpine
+    container_name: fintech-audit-db
+    environment:
+      POSTGRES_USER: audit_service
+      POSTGRES_PASSWORD: ${AUDIT_DB_PASSWORD:-audit-dev-password}
+      POSTGRES_DB: audit_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - audit_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/audit-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit_service -d audit_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-notification:
+    image: postgres:15-alpine
+    container_name: fintech-notification-db
+    environment:
+      POSTGRES_USER: notification_service
+      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD:-notification-dev-password}
+      POSTGRES_DB: notification_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/notification-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notification_service -d notification_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-partner:
+    image: postgres:15-alpine
+    container_name: fintech-partner-db
+    environment:
+      POSTGRES_USER: partner_service
+      POSTGRES_PASSWORD: ${PARTNER_DB_PASSWORD:-partner-dev-password}
+      POSTGRES_DB: partner_db
+    ports:
+      - "5437:5432"
+    volumes:
+      - partner_db_data:/var/lib/postgresql/data
+      - ./infrastructure/db/partner-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U partner_service -d partner_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # SHARED INFRASTRUCTURE
+  # ============================================
+  
+  redis:
+    image: redis:7-alpine
+    container_name: fintech-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fintech-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  user_db_data:
+  payment_db_data:
+  fraud_db_data:
+  audit_db_data:
+  notification_db_data:
+  partner_db_data:
+  redis_data:
+  rabbitmq_data:
