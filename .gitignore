@@ -1,0 +1,32 @@
+*.class
+*.jar
+*.exe
+node_modules/
+.env
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+
+# Go
+backend/go-services/**/bin/
+backend/go-services/**/vendor/
+*.exe
+*.test
+
+# Environment & Logs
+.env
+*.log
+logs/
+
+# OS specific
+.DS_Store
+Thumbs.db
