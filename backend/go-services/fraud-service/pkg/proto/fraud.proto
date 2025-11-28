@@ -1,0 +1,275 @@
+syntax = "proto3";
+
+package fraud.v1;
+
+option go_package = "payguard/fraud-service/pkg/proto/fraud/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// Fraud Detection Service
+service FraudService {
+  // Check transaction for fraud
+  rpc CheckFraud(CheckFraudRequest) returns (CheckFraudResponse);
+  
+  // Get fraud check details
+  rpc GetFraudCheck(GetFraudCheckRequest) returns (GetFraudCheckResponse);
+  
+  // List fraud checks
+  rpc ListFraudChecks(ListFraudChecksRequest) returns (ListFraudChecksResponse);
+  
+  // Create fraud rule
+  rpc CreateFraudRule(CreateFraudRuleRequest) returns (CreateFraudRuleResponse);
+  
+  // Update fraud rule
+  rpc UpdateFraudRule(UpdateFraudRuleRequest) returns (UpdateFraudRuleResponse);
+  
+  // Delete fraud rule
+  rpc DeleteFraudRule(DeleteFraudRuleRequest) returns (DeleteFraudRuleResponse);
+  
+  // List fraud rules
+  rpc ListFraudRules(ListFraudRulesRequest) returns (ListFraudRulesResponse);
+  
+  // Add to blacklist
+  rpc AddToBlacklist(AddToBlacklistRequest) returns (AddToBlacklistResponse);
+  
+  // Remove from blacklist
+  rpc RemoveFromBlacklist(RemoveFromBlacklistRequest) returns (RemoveFromBlacklistResponse);
+  
+  // Check blacklist
+  rpc CheckBlacklist(CheckBlacklistRequest) returns (CheckBlacklistResponse);
+}
+
+// Enums
+enum FraudCheckStatus {
+  FRAUD_CHECK_STATUS_UNSPECIFIED = 0;
+  FRAUD_CHECK_STATUS_PENDING = 1;
+  FRAUD_CHECK_STATUS_PROCESSING = 2;
+  FRAUD_CHECK_STATUS_COMPLETED = 3;
+  FRAUD_CHECK_STATUS_FAILED = 4;
+}
+
+enum FraudDecision {
+  FRAUD_DECISION_UNSPECIFIED = 0;
+  FRAUD_DECISION_APPROVE = 1;
+  FRAUD_DECISION_REVIEW = 2;
+  FRAUD_DECISION_DECLINE = 3;
+  FRAUD_DECISION_BLOCK = 4;
+}
+
+enum RiskLevel {
+  RISK_LEVEL_UNSPECIFIED = 0;
+  RISK_LEVEL_LOW = 1;
+  RISK_LEVEL_MEDIUM = 2;
+  RISK_LEVEL_HIGH = 3;
+  RISK_LEVEL_CRITICAL = 4;
+}
+
+enum RuleAction {
+  RULE_ACTION_UNSPECIFIED = 0;
+  RULE_ACTION_APPROVE = 1;
+  RULE_ACTION_REVIEW = 2;
+  RULE_ACTION_DECLINE = 3;
+  RULE_ACTION_BLOCK = 4;
+}
+
+// Messages
+message FraudCheck {
+  string id = 1;
+  string payment_id = 2;
+  string merchant_id = 3;
+  string customer_id = 4;
+  FraudCheckStatus status = 5;
+  FraudDecision decision = 6;
+  RiskLevel risk_level = 7;
+  double risk_score = 8;
+  int64 amount = 9;
+  string currency = 10;
+  string ip_address = 11;
+  string country = 12;
+  string device_fingerprint = 13;
+  string user_agent = 14;
+  string email = 15;
+  string phone_number = 16;
+  Address billing_address = 17;
+  Address shipping_address = 18;
+  map<string, string> metadata = 19;
+  repeated string reasons = 20;
+  google.protobuf.Timestamp processed_at = 21;
+  google.protobuf.Timestamp created_at = 22;
+  google.protobuf.Timestamp updated_at = 23;
+}
+
+message Address {
+  string line1 = 1;
+  string line2 = 2;
+  string city = 3;
+  string state = 4;
+  string postal_code = 5;
+  string country = 6;
+}
+
+message FraudRule {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string rule_type = 4;
+  map<string, string> conditions = 5;
+  RuleAction action = 6;
+  double weight = 7;
+  bool is_active = 8;
+  int32 priority = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+message RuleExecution {
+  string rule_id = 1;
+  string rule_name = 2;
+  bool matched = 3;
+  double score = 4;
+  string reason = 5;
+  map<string, string> details = 6;
+}
+
+// Requests
+message CheckFraudRequest {
+  string payment_id = 1;
+  string merchant_id = 2;
+  string customer_id = 3;
+  int64 amount = 4;
+  string currency = 5;
+  string ip_address = 6;
+  string device_fingerprint = 7;
+  string user_agent = 8;
+  string email = 9;
+  string phone_number = 10;
+  Address billing_address = 11;
+  Address shipping_address = 12;
+  string card_token = 13;
+  string card_brand = 14;
+  string last4 = 15;
+  map<string, string> metadata = 16;
+}
+
+message CheckFraudResponse {
+  FraudCheck fraud_check = 1;
+  repeated RuleExecution rule_executions = 2;
+  string error = 3;
+}
+
+message GetFraudCheckRequest {
+  string fraud_check_id = 1;
+}
+
+message GetFraudCheckResponse {
+  FraudCheck fraud_check = 1;
+  repeated RuleExecution rule_executions = 2;
+  string error = 3;
+}
+
+message ListFraudChecksRequest {
+  string merchant_id = 1;
+  FraudDecision decision = 2;
+  RiskLevel risk_level = 3;
+  int32 page = 4;
+  int32 page_size = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+}
+
+message ListFraudChecksResponse {
+  repeated FraudCheck fraud_checks = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  string error = 5;
+}
+
+message CreateFraudRuleRequest {
+  string name = 1;
+  string description = 2;
+  string rule_type = 3;
+  map<string, string> conditions = 4;
+  RuleAction action = 5;
+  double weight = 6;
+  int32 priority = 7;
+}
+
+message CreateFraudRuleResponse {
+  FraudRule rule = 1;
+  string error = 2;
+}
+
+message UpdateFraudRuleRequest {
+  string rule_id = 1;
+  string name = 2;
+  string description = 3;
+  map<string, string> conditions = 4;
+  RuleAction action = 5;
+  double weight = 6;
+  bool is_active = 7;
+  int32 priority = 8;
+}
+
+message UpdateFraudRuleResponse {
+  FraudRule rule = 1;
+  string error = 2;
+}
+
+message DeleteFraudRuleRequest {
+  string rule_id = 1;
+}
+
+message DeleteFraudRuleResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message ListFraudRulesRequest {
+  bool active_only = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListFraudRulesResponse {
+  repeated FraudRule rules = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  string error = 5;
+}
+
+message AddToBlacklistRequest {
+  string pattern_type = 1; // CARD, EMAIL, IP, DEVICE
+  string pattern_value = 2;
+  string reason = 3;
+  RiskLevel severity = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
+message AddToBlacklistResponse {
+  string pattern_id = 1;
+  string error = 2;
+}
+
+message RemoveFromBlacklistRequest {
+  string pattern_type = 1;
+  string pattern_value = 2;
+}
+
+message RemoveFromBlacklistResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message CheckBlacklistRequest {
+  string pattern_type = 1;
+  string pattern_value = 2;
+}
+
+message CheckBlacklistResponse {
+  bool is_blacklisted = 1;
+  string reason = 2;
+  RiskLevel severity = 3;
+  string error = 4;
+}

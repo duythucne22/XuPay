@@ -1,0 +1,200 @@
+syntax = "proto3";
+
+package payment.v1;
+
+option go_package = "payguard/payment-service/pkg/proto/payment/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// Payment Service
+service PaymentService {
+  // Create a new payment
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+  
+  // Get payment details
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+  
+  // List payments
+  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse);
+  
+  // Update payment status
+  rpc UpdatePaymentStatus(UpdatePaymentStatusRequest) returns (UpdatePaymentStatusResponse);
+  
+  // Process payment
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  
+  // Refund payment
+  rpc RefundPayment(RefundPaymentRequest) returns (RefundPaymentResponse);
+  
+  // Cancel payment
+  rpc CancelPayment(CancelPaymentRequest) returns (CancelPaymentResponse);
+}
+
+// Enums
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_PROCESSING = 2;
+  PAYMENT_STATUS_COMPLETED = 3;
+  PAYMENT_STATUS_FAILED = 4;
+  PAYMENT_STATUS_CANCELLED = 5;
+  PAYMENT_STATUS_REFUNDED = 6;
+}
+
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_CREDIT_CARD = 1;
+  PAYMENT_METHOD_DEBIT_CARD = 2;
+  PAYMENT_METHOD_BANK_TRANSFER = 3;
+  PAYMENT_METHOD_WALLET = 4;
+  PAYMENT_METHOD_UPI = 5;
+}
+
+enum Currency {
+  CURRENCY_UNSPECIFIED = 0;
+  CURRENCY_USD = 1;
+  CURRENCY_EUR = 2;
+  CURRENCY_GBP = 3;
+  CURRENCY_INR = 4;
+  CURRENCY_VND = 5;
+}
+
+// Messages
+message Payment {
+  string id = 1;
+  string merchant_id = 2;
+  string customer_id = 3;
+  string order_id = 4;
+  int64 amount = 5;
+  Currency currency = 6;
+  PaymentMethod payment_method = 7;
+  PaymentStatus status = 8;
+  string description = 9;
+  map<string, string> metadata = 10;
+  string fraud_check_id = 11;
+  double fraud_score = 12;
+  string ip_address = 13;
+  string user_agent = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  google.protobuf.Timestamp completed_at = 17;
+  string error_code = 18;
+  string error_message = 19;
+}
+
+message CardDetails {
+  string card_number = 1;
+  string card_brand = 2;
+  int32 expiry_month = 3;
+  int32 expiry_year = 4;
+  string cvv = 5;
+  string cardholder_name = 6;
+  Address billing_address = 7;
+}
+
+message Address {
+  string line1 = 1;
+  string line2 = 2;
+  string city = 3;
+  string state = 4;
+  string postal_code = 5;
+  string country = 6;
+}
+
+message Customer {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+  string phone_number = 4;
+  Address address = 5;
+}
+
+// Requests
+message CreatePaymentRequest {
+  string merchant_id = 1;
+  Customer customer = 2;
+  string order_id = 3;
+  int64 amount = 4;
+  Currency currency = 5;
+  PaymentMethod payment_method = 6;
+  CardDetails card_details = 7;
+  string description = 8;
+  map<string, string> metadata = 9;
+  string ip_address = 10;
+  string user_agent = 11;
+}
+
+message CreatePaymentResponse {
+  Payment payment = 1;
+  string error = 2;
+}
+
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+message GetPaymentResponse {
+  Payment payment = 1;
+  string error = 2;
+}
+
+message ListPaymentsRequest {
+  string merchant_id = 1;
+  PaymentStatus status = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message ListPaymentsResponse {
+  repeated Payment payments = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  string error = 5;
+}
+
+message UpdatePaymentStatusRequest {
+  string payment_id = 1;
+  PaymentStatus status = 2;
+  string reason = 3;
+}
+
+message UpdatePaymentStatusResponse {
+  Payment payment = 1;
+  string error = 2;
+}
+
+message ProcessPaymentRequest {
+  string payment_id = 1;
+  map<string, string> gateway_params = 2;
+}
+
+message ProcessPaymentResponse {
+  Payment payment = 1;
+  string transaction_id = 2;
+  string error = 3;
+}
+
+message RefundPaymentRequest {
+  string payment_id = 1;
+  int64 amount = 2;
+  string reason = 3;
+}
+
+message RefundPaymentResponse {
+  Payment payment = 1;
+  string refund_id = 2;
+  string error = 3;
+}
+
+message CancelPaymentRequest {
+  string payment_id = 1;
+  string reason = 2;
+}
+
+message CancelPaymentResponse {
+  Payment payment = 1;
+  string error = 2;
+}
