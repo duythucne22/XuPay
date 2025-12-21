@@ -1,0 +1,215 @@
+{
+  "info": {
+    "name": "Payment Service API",
+    "_postman_id": "payment-service-api-collection",
+    "description": "API collection for XuPay Payment Service (transactions & wallets)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Create/Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Idempotency-Key",
+                "value": "{{$guid}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"{{$guid}}\",\n  \"fromUserId\": \"11111111-1111-1111-1111-111111111111\",\n  \"toUserId\": \"22222222-2222-2222-2222-222222222222\",\n  \"amountCents\": 10000,\n  \"description\": \"Payment for order #123\",\n  \"ipAddress\": \"127.0.0.1\",\n  \"userAgent\": \"PostmanRuntime/7.26.8\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/transfer",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "transfer"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction Detail",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/:transactionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", ":transactionId"],
+              "variable": [
+                {
+                  "key": "transactionId",
+                  "value": "ENTER_TX_ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get by Idempotency Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/idempotency/:idempotencyKey",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "idempotency", ":idempotencyKey"],
+              "variable": [
+                {
+                  "key": "idempotencyKey",
+                  "value": "PASTE_UUID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Transactions (by user)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments?userId=11111111-1111-1111-1111-111111111111",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "11111111-1111-1111-1111-111111111111"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallets",
+      "item": [
+        {
+          "name": "Create Wallet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"11111111-1111-1111-1111-111111111111\",\n  \"walletType\": \"PERSONAL\",\n  \"currency\": \"VND\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/wallets",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallets"]
+            }
+          }
+        },
+        {
+          "name": "Get Wallet By User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/wallets/user/:userId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallets", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "11111111-1111-1111-1111-111111111111"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Wallet Balance",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/wallets/:walletId/balance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallets", ":walletId", "balance"],
+              "variable": [
+                {
+                  "key": "walletId",
+                  "value": "ENTER_WALLET_ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Freeze/Unfreeze Wallet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"freeze\": true,\n  \"reason\": \"Admin action\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/wallets/:walletId/freeze",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wallets", ":walletId", "freeze"],
+              "variable": [
+                {
+                  "key": "walletId",
+                  "value": "ENTER_WALLET_ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
