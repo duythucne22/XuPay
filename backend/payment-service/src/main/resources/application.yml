@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: payment-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5433/payment_db
+    username: payment_service_user
+    password: P@ym3ntS3rv1c3P@ss2025!
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Schema exists, just validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        format_sql: true
+    show-sql: false
+  
+  flyway:
+    enabled: true  # Enable Flyway migrations (V1 already applied, V2 will run on next start)
+    baseline-on-migrate: true  # Allow Flyway to work with existing schema
+    locations: classpath:db/migration  # V1__complete_payment_schema.sql, V2__fraud_rules_data.sql
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: R3d1sP@ss2025!
+      timeout: 60000
+  
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+
+server:
+  port: 8082
+
+# gRPC Client Configuration (for calling User Service)
+grpc:
+  client:
+    user-service:
+      address: 'static://localhost:50053'
+      negotiationType: plaintext
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    com.xupay.payment: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

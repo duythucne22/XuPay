@@ -1,0 +1,41 @@
+:root {
+  /* Primary Colors */
+  --primary-blue: 0 87 184; /* #0057B8 */
+  --primary-blue-light: 240 248 255; /* #F0F8FF */
+  --primary-blue-soft: 232 244 255; /* #E8F4FF */
+  --primary-cyan: 0 168 232; /* #00A8E8 */
+  --primary-teal: 0 184 169; /* #00B8A9 */
+
+  /* Extended Colors */
+  --success-emerald: 5 150 105; /* #059669 */
+  --error-red: 220 38 38; /* #DC2626 */
+  --warning-amber: 217 119 6; /* #D97706 */
+  --info-blue: 3 105 161; /* #0369A1 */
+  --accent-purple: 124 58 237; /* #7C3AED */
+  --accent-indigo: 79 70 229; /* #4F46E5 */
+
+  /* Neutrals */
+  --text-primary: 17 24 39; /* #111827 */
+  --text-secondary: 107 114 128; /* #6B7280 */
+  --text-tertiary: 156 163 175; /* #9CA3AF */
+  --border: 229 231 235; /* #E5E7EB */
+  --bg-surface: 248 249 250; /* #F8F9FA */
+
+  /* Glassmorphic */
+  --glass-bg: 255 255 255; /* rgba base */
+}
+
+.glass-panel {
+  background-color: rgba(var(--glass-bg), 0.08);
+  border: 1px solid rgba(var(--glass-bg), 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.hover-lift {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}

@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.xupay.user.grpc";
+option java_outer_classname = "UserServiceProto";
+
+package xupay.user;
+
+// =====================================================
+// USER SERVICE - gRPC API
+// For Payment Service to validate users and check limits
+// =====================================================
+service UserService {
+  // Validate if user can perform a transaction (comprehensive check)
+  rpc ValidateUser(ValidateUserRequest) returns (ValidateUserResponse);
+  
+  // Get user details by ID
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  
+  // Check if transaction amount is within limits
+  rpc CheckTransactionLimit(CheckLimitRequest) returns (CheckLimitResponse);
+  
+  // Get user's KYC status and tier limits
+  rpc GetKycStatus(GetKycStatusRequest) returns (GetKycStatusResponse);
+  
+  // Record transaction usage (update daily_usage table)
+  rpc RecordTransaction(RecordTransactionRequest) returns (RecordTransactionResponse);
+}
+
+// =====================================================
+// REQUEST MESSAGES
+// =====================================================
+
+message ValidateUserRequest {
+  string user_id = 1;  // UUID as string
+  int64 amount_cents = 2;
+  string transaction_type = 3;  // "send" or "receive"
+}
+
+message GetUserRequest {
+  string user_id = 1;  // UUID as string
+}
+
+message CheckLimitRequest {
+  string user_id = 1;  // UUID as string
+  int64 amount_cents = 2;
+  string transaction_type = 3;  // "send" or "receive"
+}
+
+message GetKycStatusRequest {
+  string user_id = 1;  // UUID as string
+}
+
+message RecordTransactionRequest {
+  string user_id = 1;  // UUID as string
+  int64 amount_cents = 2;
+  string transaction_type = 3;  // "send" or "receive"
+  string transaction_id = 4;  // For idempotency tracking
+}
+
+// =====================================================
+// RESPONSE MESSAGES
+// =====================================================
+
+message ValidateUserResponse {
+  bool is_valid = 1;
+  string reason = 2;  // Empty if valid, error message if not
+  UserInfo user = 3;  // User details if valid
+}
+
+message GetUserResponse {
+  UserInfo user = 1;
+}
+
+message CheckLimitResponse {
+  bool allowed = 1;
+  string reason = 2;  // Empty if allowed, error message if not
+  int64 remaining_limit_cents = 3;
+  int64 daily_limit_cents = 4;
+}
+
+message GetKycStatusResponse {
+  string kyc_status = 1;  // PENDING, APPROVED, REJECTED, SUSPENDED
+  string kyc_tier = 2;    // TIER_0, TIER_1, TIER_2, TIER_3
+  int64 daily_send_limit_cents = 3;
+  int64 daily_receive_limit_cents = 4;
+  int64 single_transaction_max_cents = 5;
+  bool can_send_international = 6;
+  bool requires_2fa = 7;
+}
+
+message RecordTransactionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// =====================================================
+// COMMON MESSAGES
+// =====================================================
+
+message UserInfo {
+  string user_id = 1;
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string phone = 5;
+  string kyc_status = 6;  // PENDING, APPROVED, REJECTED, SUSPENDED
+  string kyc_tier = 7;    // TIER_0, TIER_1, TIER_2, TIER_3
+  bool is_active = 8;
+  bool is_suspended = 9;
+  int32 fraud_score = 10;
+}
+
+// =====================================================
+// ERROR HANDLING
+// =====================================================
+// gRPC uses standard Status codes:
+// - OK (0): Success
+// - INVALID_ARGUMENT (3): Bad request (e.g., invalid UUID, negative amount)
+// - NOT_FOUND (5): User not found
+// - PERMISSION_DENIED (7): User suspended/blocked/KYC not approved
+// - RESOURCE_EXHAUSTED (8): Rate limit exceeded
+// - UNAVAILABLE (14): Service temporarily down
+// - UNAUTHENTICATED (16): Invalid JWT in metadata
+// - INTERNAL (13): Unexpected server error

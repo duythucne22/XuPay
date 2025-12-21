@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: user-service
+    version: 1.0.0
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:user_db}
+    username: ${DB_USER:user_service_user}
+    password: ${DB_PASSWORD:UserS3rv1c3P@ss2025!}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Development: update schema automatically
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+server:
+  port: 8081
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    min-response-size: 1024
+
+grpc:
+  server:
+    port: 50053
+    enable-keep-alive: true
+    enable-keep-alive-without-calls: true
+    keep-alive-time: 30m
+    keep-alive-timeout: 10s
+    max-inbound-message-size: 4194304  # 4MB
+    security:
+      enabled: false  # Disable Spring Security for gRPC (we use custom JWT interceptor)
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:xupay-super-secret-key-minimum-256-bits-for-production-use-only}
+  expiration: 86400000  # 24 hours in milliseconds
+  issuer: xupay-user-service
+  audience: xupay-client
+
+logging:
+  level:
+    root: INFO
+    com.fintech: DEBUG
+    net.devh.boot.grpc: TRACE
+    org.springframework.web: INFO
+    org.hibernate: WARN
+    io.grpc: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

@@ -1,154 +1,312 @@
-version: '3.9'
+# ========================================================
+# XuPay FinTech MVP - PRODUCTION DOCKER COMPOSE
+# ========================================================
+# Created: December 17, 2025
+# Services: User, Payment, Audit + Infrastructure
+# Infrastructure: PostgreSQL x3, Redis, RabbitMQ, NGINX
+# ========================================================
+
+version: '3.8'
+
+# ========================================================
+# NETWORKS
+# ========================================================
+networks:
+  xupay-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ========================================================
+# VOLUMES (Persistent Data)
+# ========================================================
+volumes:
+  postgres-user-data:
+    driver: local
+  postgres-payment-data:
+    driver: local
+  redis-data:
+    driver: local
+  rabbitmq-data:
+    driver: local
+
+# ========================================================
+# SERVICES
+# ========================================================
 services:
-  # ============================================
-  # SEPARATE DATABASES FOR EACH SERVICE
-  # ============================================
   
+  # ------------------------------------------------------
+  # DATABASE 1: USER SERVICE DATABASE
+  # ------------------------------------------------------
   postgres-user:
     image: postgres:15-alpine
-    container_name: fintech-user-db
+    container_name: xupay-postgres-user
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: user_service
-      POSTGRES_PASSWORD: ${USER_DB_PASSWORD:-user-dev-password}
       POSTGRES_DB: user_db
+      POSTGRES_USER: user_service_user
+      POSTGRES_PASSWORD: UserS3rv1c3P@ss2025!
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
     volumes:
-      - user_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/user-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+      - postgres-user-data:/var/lib/postgresql/data
+      - ./infrastructure/db/user-service:/docker-entrypoint-initdb.d:ro
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.10
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user_service -d user_db"]
+      test: ["CMD-SHELL", "pg_isready -U user_service_user -d user_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+    command: 
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
 
+  # ------------------------------------------------------
+  # DATABASE 2: PAYMENT SERVICE DATABASE
+  # ------------------------------------------------------
   postgres-payment:
     image: postgres:15-alpine
-    container_name: fintech-payment-db
+    container_name: xupay-postgres-payment
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: payment_service
-      POSTGRES_PASSWORD: ${PAYMENT_DB_PASSWORD:-payment-dev-password}
       POSTGRES_DB: payment_db
+      POSTGRES_USER: payment_service_user
+      POSTGRES_PASSWORD: P@ym3ntS3rv1c3P@ss2025!
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5433:5432"
+      - "5433:5432"  # External port 5433 to avoid conflict
     volumes:
-      - payment_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/payment-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
+      - postgres-payment-data:/var/lib/postgresql/data
+      - ./infrastructure/db/payment-service:/docker-entrypoint-initdb.d:ro
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.11
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U payment_service -d payment_db"]
+      test: ["CMD-SHELL", "pg_isready -U payment_service_user -d payment_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=512MB"
+      - "-c"
+      - "effective_cache_size=2GB"
+      - "-c"
+      - "default_transaction_isolation=serializable"  # Critical for ledger
 
-  postgres-fraud:
-    image: postgres:15-alpine
-    container_name: fintech-fraud-db
-    environment:
-      POSTGRES_USER: fraud_service
-      POSTGRES_PASSWORD: ${FRAUD_DB_PASSWORD:-fraud-dev-password}
-      POSTGRES_DB: fraud_db
-    ports:
-      - "5434:5432"
-    volumes:
-      - fraud_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/fraud-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fraud_service -d fraud_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-audit:
-    image: postgres:15-alpine
-    container_name: fintech-audit-db
-    environment:
-      POSTGRES_USER: audit_service
-      POSTGRES_PASSWORD: ${AUDIT_DB_PASSWORD:-audit-dev-password}
-      POSTGRES_DB: audit_db
-    ports:
-      - "5435:5432"
-    volumes:
-      - audit_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/audit-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U audit_service -d audit_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-notification:
-    image: postgres:15-alpine
-    container_name: fintech-notification-db
-    environment:
-      POSTGRES_USER: notification_service
-      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD:-notification-dev-password}
-      POSTGRES_DB: notification_db
-    ports:
-      - "5436:5432"
-    volumes:
-      - notification_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/notification-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U notification_service -d notification_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  postgres-partner:
-    image: postgres:15-alpine
-    container_name: fintech-partner-db
-    environment:
-      POSTGRES_USER: partner_service
-      POSTGRES_PASSWORD: ${PARTNER_DB_PASSWORD:-partner-dev-password}
-      POSTGRES_DB: partner_db
-    ports:
-      - "5437:5432"
-    volumes:
-      - partner_db_data:/var/lib/postgresql/data
-      - ./infrastructure/db/partner-service/001_core_schema.sql:/docker-entrypoint-initdb.d/001_core_schema.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U partner_service -d partner_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # ============================================
-  # SHARED INFRASTRUCTURE
-  # ============================================
-  
+  # ------------------------------------------------------
+  # REDIS CACHE (Idempotency + Rate Limiting)
+  # ------------------------------------------------------
   redis:
     image: redis:7-alpine
-    container_name: fintech-redis
+    container_name: xupay-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - redis-data:/data
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.20
+    command: 
+      - "redis-server"
+      - "--appendonly"
+      - "yes"
+      - "--requirepass"
+      - "R3d1sP@ss2025!"
+      - "--maxmemory"
+      - "512mb"
+      - "--maxmemory-policy"
+      - "allkeys-lru"
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s
-      timeout: 5s
+      timeout: 3s
       retries: 5
 
+  # ------------------------------------------------------
+  # RABBITMQ (Event Bus)
+  # ------------------------------------------------------
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: fintech-rabbitmq
+    image: rabbitmq:3.12-management-alpine
+    container_name: xupay-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: xupay_admin
+      RABBITMQ_DEFAULT_PASS: RabbitMQP@ss2025!
+      RABBITMQ_DEFAULT_VHOST: /xupay
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.21
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 5
 
-volumes:
-  user_db_data:
-  payment_db_data:
-  fraud_db_data:
-  audit_db_data:
-  notification_db_data:
-  partner_db_data:
-  redis_data:
-  rabbitmq_data:
+  # ------------------------------------------------------
+  # USER SERVICE (Java Spring Boot 3.4.1)
+  # ------------------------------------------------------
+  user-service:
+    build:
+      context: ./backend/java-services/user-service
+      dockerfile: Dockerfile
+    container_name: xupay-user-service
+    restart: unless-stopped
+    environment:
+      # Database
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/user_db
+      SPRING_DATASOURCE_USERNAME: user_service_user
+      SPRING_DATASOURCE_PASSWORD: UserS3rv1c3P@ss2025!
+      
+      # JPA/Hibernate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      
+      # Flyway
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      
+      # Server
+      SERVER_PORT: 8081
+      SPRING_APPLICATION_NAME: user-service
+      
+      # JWT
+      JWT_SECRET: YourSuperSecretJWTKeyForProductionUseAtLeast256BitsChangeThis2025!
+      JWT_EXPIRATION: 86400000  # 24 hours
+      
+      # gRPC Server
+      GRPC_SERVER_PORT: 9091
+      
+      # Logging
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_COM_XUPAY: DEBUG
+      
+    ports:
+      - "8081:8081"
+      - "9091:9091"  # gRPC port
+    depends_on:
+      postgres-user:
+        condition: service_healthy
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.30
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ------------------------------------------------------
+  # PAYMENT SERVICE (Java Spring Boot 3.4.1)
+  # ------------------------------------------------------
+  payment-service:
+    build:
+      context: ./backend/java-services/payment-service
+      dockerfile: Dockerfile
+    container_name: xupay-payment-service
+    restart: unless-stopped
+    environment:
+      # Database
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-payment:5432/payment_db
+      SPRING_DATASOURCE_USERNAME: payment_service_user
+      SPRING_DATASOURCE_PASSWORD: P@ym3ntS3rv1c3P@ss2025!
+      
+      # JPA/Hibernate - CRITICAL: SERIALIZABLE isolation
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_ISOLATION: 8  # SERIALIZABLE
+      
+      # Flyway
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      
+      # Server
+      SERVER_PORT: 8082
+      SPRING_APPLICATION_NAME: payment-service
+      
+      # Redis (Idempotency Cache)
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: R3d1sP@ss2025!
+      SPRING_REDIS_TIMEOUT: 2000
+      
+      # gRPC Client (User Service)
+      GRPC_CLIENT_USER_SERVICE_ADDRESS: static://user-service:9091
+      GRPC_CLIENT_USER_SERVICE_NEGOTIATION_TYPE: plaintext
+      
+      # Logging
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_COM_XUPAY: DEBUG
+      
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres-payment:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    networks:
+      xupay-network:
+        ipv4_address: 172.20.0.31
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+# ========================================================
+# NOTES
+# ========================================================
+# MVP CONFIGURATION (2 Services: User + Payment)
+# Audit Service removed to simplify architecture
+# RabbitMQ removed (can add back for async events later)
+#
+# To start all services:
+#   docker-compose up -d
+#
+# To view logs:
+#   docker-compose logs -f [service-name]
+#
+# To stop all services:
+#   docker-compose down
+#
+# To destroy everything (including volumes):
+#   docker-compose down -v
+#
+# Access URLs:
+#   User Service:     http://localhost:8081
+#   Payment Service:  http://localhost:8082
+#
+# Database Connections (from host):
+#   User DB:     postgresql://user_service_user:UserS3rv1c3P@ss2025!@localhost:5432/user_db
+#   Payment DB:  postgresql://payment_service_user:P@ym3ntS3rv1c3P@ss2025!@localhost:5433/payment_db
+#
+# Redis Connection:
+#   redis-cli -h localhost -p 6379 -a 'R3d1sP@ss2025!'
+# ========================================================
