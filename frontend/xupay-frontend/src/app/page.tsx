@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import HomePageContent from '@/components/HomePageContent'
+import HomePageContent from '@/components/home'
 
 export const metadata = {
   title: 'XuPay - Digital Wallet & Payment Solutions',

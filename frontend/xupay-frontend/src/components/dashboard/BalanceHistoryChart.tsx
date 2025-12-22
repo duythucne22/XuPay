@@ -1,178 +1,252 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
+import React, { useState } from 'react'
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
   ResponsiveContainer,
+  TooltipProps 
 } from 'recharts'
+import { NeoCard } from '@/components/ui/NeoCard'
+import { Button } from '@/components/ui/button'
 
-interface BalanceHistoryPoint {
-  date: string
-  balance: number
-}
+// Mock Data: Simulating a realistic balance curve
+const DATA = [
+  { name: 'Mon', value: 2400 },
+  { name: 'Tue', value: 1398 },
+  { name: 'Wed', value: 3800 },
+  { name: 'Thu', value: 3908 },
+  { name: 'Fri', value: 4800 },
+  { name: 'Sat', value: 3800 },
+  { name: 'Sun', value: 4300 },
+]
 
-interface BalanceHistoryChartProps {
-  data: BalanceHistoryPoint[]
-  walletName?: string
-  currency?: string
-}
-
-export function BalanceHistoryChart({
-  data,
-  walletName = 'Wallet',
-  currency = 'USD',
-}: BalanceHistoryChartProps) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
-
-  // Format currency for tooltip
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)
-  }
-
-  // Prepare data for chart (last 30 days)
-  const chartData = data.slice(-30)
-
-  if (!chartData || chartData.length === 0) {
+// Custom Tooltip Component (Glass Style)
+const CustomTooltip = (props: TooltipProps<number, string> & { payload?: any[] }) => {
+  const { active, payload } = props
+  if (active && payload && payload.length) {
+    const label = payload[0].payload?.name
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6" data-testid="balance-history-chart">
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{walletName} — Balance History (30 days)</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">No balance history available</p>
-        </div>
+      <div className="bg-[#0a0a0a]/90 backdrop-blur-md border border-white/10 p-3 rounded-xl shadow-xl shadow-black/50">
+        <p className="text-gray-400 text-xs mb-1">{label}</p>
+        <p className="text-emerald-400 font-bold text-lg">
+          ${payload[0].value?.toLocaleString()}
+        </p>
       </div>
     )
   }
-
-  // Find min/max for chart scaling
-  const balances = chartData.map((d) => d.balance)
-  const minBalance = Math.min(...balances)
-  const maxBalance = Math.max(...balances)
-  const avgBalance = (minBalance + maxBalance) / 2
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-6"
-      data-testid="balance-history-chart"
-    >
-      {/* Header */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          {walletName} — Balance History (30 days)
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Average: {formatCurrency(avgBalance)}
-        </p>
-      </div>
-
-      {/* Chart */}
-      <div className="h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={chartData}
-            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-          >
-            <defs>
-              <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#e5e7eb"
-              className="dark:stroke-slate-700"
-            />
-            <XAxis
-              dataKey="date"
-              stroke="#9ca3af"
-              className="dark:stroke-gray-500"
-              style={{ fontSize: '12px' }}
-              tick={{ fill: '#9ca3af' }}
-              tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              })}
-            />
-            <YAxis
-              stroke="#9ca3af"
-              className="dark:stroke-gray-500"
-              style={{ fontSize: '12px' }}
-              tick={{ fill: '#9ca3af' }}
-              tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
-            />
-            <Tooltip
-              formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : '$0'}
-              labelFormatter={(label) =>
-                new Date(label).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })
-              }
-              contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #475569',
-                borderRadius: '8px',
-                color: '#e2e8f0',
-              }}
-              labelStyle={{
-                color: '#e2e8f0',
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="balance"
-              stroke="#6366f1"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={true}
-              animationDuration={500}
-              fillOpacity={1}
-              fill="url(#colorBalance)"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Stats Footer */}
-      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
-        <div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Highest</p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {formatCurrency(maxBalance)}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Average</p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {formatCurrency(avgBalance)}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Lowest</p>
-          <p className="font-semibold text-gray-900 dark:text-white">
-            {formatCurrency(minBalance)}
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  )
+  return null
 }
 
-export default BalanceHistoryChart
+export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balance History', currency = 'USD' }: {
+  data?: { date?: string; name?: string; balance?: number; value?: number }[]
+  walletName?: string
+  currency?: string
+}) {
+  const [range, setRange] = useState('7d')
+
+  const points = propData.map((d: any) => ({
+    name: d.date ?? d.name,
+    value: (d.balance ?? d.value ?? 0)
+  }))
+
+  const values = points.map((p) => p.value)
+  const min = values.length ? Math.min(...values) : 0
+  const max = values.length ? Math.max(...values) : 0
+  const avg = values.length ? values.reduce((s, v) => s + v, 0) / values.length : 0
+
+  const formatCurrency = (v: number) => {
+    try {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(v)
+    } catch (e) {
+      return `$${v.toFixed(2)}`
+    }
+  }
+
+  return (
+    <NeoCard className="h-[400px] flex flex-col p-6">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h3 className="font-semibold text-lg text-white">Balance History</h3>
+          <div className="flex flex-col items-start gap-2 mt-1">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-white">{formatCurrency(values[values.length - 1] ?? 0)}</span>
+              <span className="text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                {values.length ? `${(((values[values.length - 1] - (values[0] || values[values.length - 1])) / (values[0] || 1)) * 100).toFixed(1)}%` : '+0%'}
+              </span>
+            </div>
+            <div className="text-xs text-gray-400">Min • Max • Average</div>
+          </div>
+        </div>
+
+        {/* Range Toggles */}
+        <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
+          {['1d', '7d', '1m', '1y'].map((r) => (
+            <button
+              key={r}
+              onClick={() => setRange(r)}
+              className={`
+                px-3 py-1 text-xs font-medium rounded-lg transition-all duration-200
+                ${range === r 
+                  ? 'bg-emerald-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]' 
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }
+              `}
+            >
+              {r.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Chart Section */}
+      <div className="flex-1 w-full min-h-0" data-testid="balance-history-chart">
+        {process.env.NODE_ENV === 'test' ? (
+          // Fallback rendering for test environment (JSDOM doesn't layout elements reliably)
+          <div data-testid="recharts-fallback">
+            <AreaChart
+              width={800}
+              height={300}
+              data={points}
+              margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
+            >
+
+              <defs>
+                {/* The "Neon Glow" Gradient */}
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="#ffffff" 
+                opacity={0.05} 
+                vertical={false} 
+              />
+              
+              <XAxis 
+                dataKey="name" 
+                stroke="#6b7280" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false}
+                dy={10}
+              />
+              
+              <YAxis 
+                stroke="#6b7280" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                tickFormatter={(value) => `${value}`}
+              />
+              
+              <Tooltip 
+                content={<CustomTooltip />} 
+                cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }}
+              />
+              
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#10b981" // Emerald-500
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorValue)"
+                activeDot={{ 
+                  r: 6, 
+                  fill: '#000000', // Black center
+                  stroke: '#10b981', // Neon border
+                  strokeWidth: 3 
+                }}
+              />
+            </AreaChart>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={points}
+              margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
+            >
+
+              <defs>
+                {/* The "Neon Glow" Gradient */}
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="#ffffff" 
+                opacity={0.05} 
+                vertical={false} 
+              />
+              
+              <XAxis 
+                dataKey="name" 
+                stroke="#6b7280" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false}
+                dy={10}
+              />
+              
+              <YAxis 
+                stroke="#6b7280" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                tickFormatter={(value) => `${value}`}
+              />
+              
+              <Tooltip 
+                content={<CustomTooltip />} 
+                cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }}
+              />
+              
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke="#10b981" // Emerald-500
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorValue)"
+                activeDot={{ 
+                  r: 6, 
+                  fill: '#000000', // Black center
+                  stroke: '#10b981', // Neon border
+                  strokeWidth: 3 
+                }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+
+      {/* Footer Stats */}
+      <div className="pt-6 border-t border-white/5 flex items-center gap-6 text-sm text-[var(--color-text-muted)]">
+        <div>
+          <div className="text-xs text-gray-400">Highest</div>
+          <div className="font-medium text-white">{formatCurrency(max)}</div>
+        </div>
+        <div>
+          <div className="text-xs text-gray-400">Lowest</div>
+          <div className="font-medium text-white">{formatCurrency(min)}</div>
+        </div>
+        <div>
+          <div className="text-xs text-gray-400">Average:</div>
+          <div className="font-medium text-white">{formatCurrency(avg)}</div>
+        </div>
+      </div>
+    </NeoCard>
+  )
+}

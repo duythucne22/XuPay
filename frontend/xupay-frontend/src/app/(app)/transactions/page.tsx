@@ -283,7 +283,7 @@ export default function TransactionsPage() {
         transition={{ duration: 0.5 }}
         className="space-y-2"
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Transactions</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Transactions</h1>
         <p className="text-gray-600 dark:text-gray-400">All activity across your wallets</p>
       </motion.div>
 
@@ -298,7 +298,7 @@ export default function TransactionsPage() {
         className="space-y-4"
       >
         {/* Date and Wallet Filters */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-row gap-4">
           <div className="relative flex-1">
             <select
               value={dateRange}
@@ -386,7 +386,7 @@ export default function TransactionsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="hidden md:block"
+        className="block"
       >
         <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
           {/* Table Header */}
@@ -418,13 +418,13 @@ export default function TransactionsPage() {
                     <p className="text-xs text-gray-500 dark:text-gray-400">{tx.time}</p>
                   </div>
 
-                  <div className="col-span-3 flex items-center gap-3">
+                  <div className="col-span-3 flex items-center gap-3 min-w-0">
                     {getTypeIcon(tx.type)}
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">{tx.description}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{tx.counterparty}</p>
+                    <div className="min-w-0">
+                      <p className="font-medium text-gray-900 dark:text-white truncate">{tx.description}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{tx.counterparty}</p>
                     </div>
-                  </div>
+                  </div> 
 
                   <div className="col-span-2 flex items-center">
                     <span className="px-3 py-1 rounded-full text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400">
@@ -460,7 +460,7 @@ export default function TransactionsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="md:hidden space-y-3"
+        className="hidden"
       >
         <StaggerContainer className="w-full">
           {paginatedTransactions.map((tx) => (
@@ -623,7 +623,7 @@ function TransactionDetailDrawer({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-400">Transaction ID</span>
-                <span className="font-mono text-gray-900 dark:text-white">{transaction.transactionId}</span>
+                <span className="font-mono text-gray-900 dark:text-white truncate max-w-[40%]">{transaction.transactionId}</span>
               </div>
 
               {transaction.reference && (

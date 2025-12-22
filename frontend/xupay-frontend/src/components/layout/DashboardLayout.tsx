@@ -2,43 +2,43 @@
 
 import React, { useState } from 'react'
 import { DashboardHeader } from './DashboardHeader'
-import { SidebarNav } from './SidebarNav'
-import { Menu, X } from 'lucide-react'
+import { Sidebar } from './Sidebar'
+import { MobileSidebar } from './MobileSidebar'
+import { Container } from './Container'
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0f172a]">
-      {/* Mobile Sidebar Overlay */}
+    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 font-sans selection:bg-emerald-500/30">
+      
+      {/* Mobile Sidebar Overlay (Glass effect) */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 transform transition-transform duration-300 z-50 lg:static lg:transform-none ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        <SidebarNav onClose={() => setIsSidebarOpen(false)} />
-      </aside>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <Sidebar />
+      </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col lg:ml-64">
-        {/* Header */}
-        <DashboardHeader
-          onMenuClick={() => setIsSidebarOpen(true)}
-        />
+      {/* Mobile Sidebar (overlay) */}
+      <MobileSidebar open={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-        {/* Content */}
-        <main className="flex-1 overflow-auto">
-          <div className="p-4 md:p-8">
+      {/* Main Content Area - Offset by Sidebar width (64 = 16rem = 256px) */}
+      <div className="lg:pl-64 flex flex-col min-h-screen transition-all duration-300">
+        
+        {/* Sticky Header */}
+        <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
+
+        {/* Page Content */}
+        <main className="flex-1 py-8">
+          <Container>
             {children}
-          </div>
+          </Container>
         </main>
       </div>
     </div>

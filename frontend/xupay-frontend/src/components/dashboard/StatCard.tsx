@@ -1,123 +1,85 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { NeoCard } from '@/components/ui/NeoCard'
+
+type ColorKey = 'blue' | 'green' | 'purple' | 'amber' | 'red'
 
 interface StatCardProps {
-  label: string
-  value: string | number
+  // Backwards-compatible props
+  label?: string
+  title?: string
+  value: string
   unit?: string
-  icon?: React.ReactNode
-  color?: 'blue' | 'green' | 'purple' | 'amber' | 'red'
   isLoading?: boolean
+  color?: ColorKey
   onClick?: () => void
+  icon?: React.ReactNode // accepts either a React node (tests) or component
+
+  // Newer metric props (optional)
+  change?: string
+  trend?: 'up' | 'down'
+  iconColor?: string
 }
 
-const colorClasses = {
-  blue: 'from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-900/10 border-blue-200 dark:border-blue-800',
-  green: 'from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-900/10 border-green-200 dark:border-green-800',
-  purple: 'from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 border-purple-200 dark:border-purple-800',
-  amber: 'from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-900/10 border-amber-200 dark:border-amber-800',
-  red: 'from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-900/10 border-red-200 dark:border-red-800',
-}
-
-const textColors = {
-  blue: 'text-blue-700 dark:text-blue-400',
-  green: 'text-green-700 dark:text-green-400',
-  purple: 'text-purple-700 dark:text-purple-400',
-  amber: 'text-amber-700 dark:text-amber-400',
-  red: 'text-red-700 dark:text-red-400',
-}
-
-export function StatCard({
-  label,
-  value,
-  unit,
-  icon,
-  color = 'blue',
-  isLoading = false,
-  onClick,
-}: StatCardProps) {
-  // Entrance animation: fade in + slide up
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' },
-    },
+function colorToFromClass(color?: ColorKey) {
+  switch (color) {
+    case 'green': return 'from-green-50'
+    case 'purple': return 'from-purple-50'
+    case 'amber': return 'from-amber-50'
+    case 'red': return 'from-red-50'
+    default: return 'from-blue-50'
   }
+}
 
-  // Hover effect: lift animation + subtle glow
-  const hoverVariants = {
-    hover: {
-      y: -8,
-      boxShadow: '0 12px 24px rgba(0, 0, 0, 0.15)',
-      transition: { duration: 0.2 },
-    },
-  }
+export function StatCard({ label, title, value, unit, isLoading, color, onClick, icon, change, trend, iconColor = 'text-emerald-400' }: StatCardProps) {
+  const isPositive = trend === 'up'
 
+  // Loading skeleton for legacy tests
   if (isLoading) {
     return (
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        className={`bg-gradient-to-br ${colorClasses[color]} rounded-lg p-5 border animate-pulse`}
-        data-testid="stat-card-skeleton"
-      >
-        <div className="space-y-3">
-          <div className="h-4 bg-gray-300 dark:bg-slate-600 rounded w-20"></div>
-          <div className="h-8 bg-gray-300 dark:bg-slate-600 rounded w-24"></div>
-        </div>
-      </motion.div>
+      <div data-testid="stat-card-skeleton" className="p-4 rounded-lg bg-white/5 w-full h-20" />
     )
   }
 
   return (
-    <motion.button
-      initial="hidden"
-      animate="visible"
-      whileHover={onClick ? 'hover' : undefined}
-      variants={containerVariants}
-      onClick={onClick}
-      disabled={!onClick}
-      className={`bg-gradient-to-br ${colorClasses[color]} rounded-lg p-5 border text-left w-full transition-all ${
-        onClick ? 'cursor-pointer hover:shadow-lg' : 'cursor-default'
-      }`}
-      data-testid="stat-card"
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">
-            {label}
-          </p>
+    <NeoCard className="p-4 group">
+      <button
+        data-testid="stat-card"
+        disabled={!onClick}
+        onClick={onClick}
+        className={`w-full text-left flex items-center justify-between gap-4 px-4 py-3 rounded-lg ${colorToFromClass(color)} bg-gradient-to-br`}
+      >
+        <div className="flex items-center gap-4 min-w-0">
+          {/* Icon area */}
+          <div className={`p-3 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors ${iconColor}`}>
+            {icon ? (
+              // If icon is a React node render it, otherwise it's a component
+              (typeof icon === 'object' || typeof icon === 'string') ? icon : React.createElement(icon as any, { size: 24 })
+            ) : (
+              <div style={{ width: 24, height: 24 }} />
+            )}
+          </div>
 
-          {/* Value with unit */}
-          <div className="flex items-baseline gap-2">
-            <motion.p
-              className={`text-2xl font-bold ${textColors[color]}`}
-              data-testid="stat-value"
-            >
-              {value}
-            </motion.p>
-            {unit && <p className="text-sm text-gray-600 dark:text-gray-400">{unit}</p>}
+          <div className="min-w-0">
+            <h3 className="text-sm font-medium text-gray-400">{label ?? title}</h3>
+            <p className="text-2xl font-bold text-white tracking-tight">
+              {value}{unit && <span className="text-sm ml-2 font-medium text-gray-400">{unit}</span>}
+            </p>
           </div>
         </div>
 
-        {/* Icon placeholder */}
-        {icon && (
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 4, repeat: Infinity, repeatType: 'loop' }}
-            className={`${textColors[color]} opacity-30`}
-          >
-            {icon}
-          </motion.div>
+        {/* Optional trend indicator for newer API */}
+        {change && (
+          <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full border ${
+            isPositive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'
+          }`}>
+            {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+            <span>{change}</span>
+          </div>
         )}
-      </div>
-    </motion.button>
+      </button>
+    </NeoCard>
   )
 }
-
-export default StatCard

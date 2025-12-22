@@ -1,158 +1,150 @@
 'use client'
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { StaggerContainer, itemVariants } from '@/components/animations'
-import { StatsGrid } from '@/components/dashboard/StatsGrid'
-import { BalanceCard } from '@/components/dashboard/BalanceCard'
+import React from 'react'
+import { Wallet, Users, CreditCard, TrendingUp, Calendar } from 'lucide-react'
+import { StatCard } from '@/components/dashboard/StatCard'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
-import { WalletSelector } from '@/components/dashboard/WalletSelector'
-import { QuickActions } from '@/components/dashboard/QuickActions'
-import { ArrowRight } from 'lucide-react'
-import { format } from 'date-fns'
+import { BalanceHistoryChart } from '@/components/dashboard/BalanceHistoryChart'
+import { NeoCard } from '@/components/ui/NeoCard'
 
 export default function DashboardPage() {
-  const currentDate = format(new Date(), 'EEEE, MMMM d, yyyy')
-
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="space-y-2"
-      >
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-          Welcome back, Minh! 👋
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">{currentDate}</p>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <StatsGrid />
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - 70% */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Wallet Card */}
-          <StaggerContainer className="w-full">
-            <motion.div
-              variants={itemVariants}
-              className="space-y-4"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Your Wallet
-              </h2>
-              <div className="bg-gradient-to-br from-indigo-500 via-indigo-600 to-[#e879f9] rounded-2xl p-8 text-white shadow-lg">
-                <BalanceCard walletId="wal_main_001" title="Account Balance" />
-              </div>
-            </motion.div>
-          </StaggerContainer>
-
-          {/* Recent Transactions */}
-          <StaggerContainer className="w-full">
-            <motion.div
-              variants={itemVariants}
-              className="space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Recent Transactions
-                </h2>
-                <Link href="/transactions">
-                  <motion.div
-                    whileHover={{ x: 4 }}
-                    className="text-indigo-600 dark:text-indigo-400 text-sm font-medium flex items-center gap-2 hover:gap-3 transition-all"
-                  >
-                    View All
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.div>
-                </Link>
-              </div>
-              <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
-                <RecentTransactions userId="user_123" />
-              </div>
-            </motion.div>
-          </StaggerContainer>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      
+      {/* 1. Page Header */}
+      <div className="flex flex-row items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            Good Afternoon, User!
+          </h1>
+          <p className="text-gray-400 mt-1">Here is what's happening with your wallet today.</p>
         </div>
+        
+        {/* Date Filter (Static for now) */}
+        <div className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-lg px-4 py-2">
+          <Calendar size={16} className="text-gray-400" />
+          <span className="text-sm text-gray-300">Oct 25, 2025</span>
+        </div>
+      </div>
 
-        {/* Right Column - 30% */}
-        <div className="space-y-8">
-          {/* Quick Actions */}
-          <StaggerContainer className="w-full">
-            <motion.div
-              variants={itemVariants}
-              className="space-y-4"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Quick Actions
-              </h2>
-              <QuickActions />
-            </motion.div>
-          </StaggerContainer>
+      {/* 2. Stats Grid (Row 1) */}
+      <div className="grid grid-cols-4 gap-6">
+        <StatCard 
+          title="Total Balance" 
+          value="$32,126.00" 
+          change="+15%" 
+          trend="up" 
+          icon={<Wallet />} 
+        />
+        <StatCard 
+          title="Total Spending" 
+          value="$1,423.00" 
+          change="-5%" 
+          trend="down" 
+          icon={<CreditCard />}
+          iconColor="text-purple-400" 
+        />
+        <StatCard 
+          title="Active Users" 
+          value="2,345" 
+          change="+12%" 
+          trend="up" 
+          icon={<Users />}
+          iconColor="text-blue-400"
+        />
+        <StatCard 
+          title="Yield Earned" 
+          value="$456.23" 
+          change="+2.4%" 
+          trend="up" 
+          icon={<TrendingUp />}
+          iconColor="text-yellow-400"
+        />
+      </div>
 
-          {/* Wallet Selector */}
-          <StaggerContainer className="w-full">
-            <motion.div
-              variants={itemVariants}
-              className="space-y-4"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Select Wallet
-              </h2>
-              <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
-                <WalletSelector userId="user_123" />
+      {/* 3. Main Layout Grid (Row 2) */}
+      <div className="grid grid-cols-12 gap-8">
+        
+        {/* LEFT COLUMN (8/12) */}
+        <div className="col-span-8 space-y-8">
+          
+          {/* Chart Placeholder (We will build BalanceHistoryChart next) */}
+          <BalanceHistoryChart />
+
+          {/* Transactions List */}
+          <RecentTransactions />
+        </div>        
+
+        {/* RIGHT COLUMN (4/12) */}
+        <div className="col-span-4 space-y-8">
+          
+          {/* My Cards Preview */}
+          <NeoCard className="p-6 bg-gradient-to-br from-emerald-900/20 to-black/40">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-semibold text-white">My Cards</h3>
+              <button className="text-xs bg-white/10 px-2 py-1 rounded hover:bg-white/20 transition-colors">
+                + Add
+              </button>
+            </div>
+            
+            {/* Visual Credit Card */}
+            <div className="aspect-[1.586/1] rounded-xl bg-gradient-to-br from-purple-600 to-indigo-900 p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 blur-2xl group-hover:bg-white/20 transition-all" />
+              
+              <div className="flex justify-between items-start">
+                <span className="font-mono text-xs text-white/70">DEBIT</span>
+                <span className="font-bold text-white tracking-widest italic">VISA</span>
               </div>
-            </motion.div>
-          </StaggerContainer>
-
-          {/* Account Stats Card */}
-          <StaggerContainer className="w-full">
-            <motion.div
-              variants={itemVariants}
-              className="space-y-4"
-            >
-              <div className="bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 rounded-lg p-6 border border-gray-200 dark:border-slate-700">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                  Account Status
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Wallets
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      3
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Total Cards
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      2
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      KYC Status
-                    </span>
-                    <span className="text-green-500 font-semibold">Verified</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Daily Limit
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      $5,000
-                    </span>
-                  </div>
+              <div>
+                <p className="font-mono text-xl text-white tracking-wider mb-2">•••• •••• •••• 4242</p>
+                <div className="flex justify-between text-xs text-white/70">
+                  <span>JOHN DOE</span>
+                  <span>12/28</span>
                 </div>
               </div>
-            </motion.div>
-          </StaggerContainer>
+            </div>
+          </NeoCard>
+
+          {/* Quick Actions (Replacer for QuickActions.tsx) */}
+          <NeoCard className="p-6">
+            <h3 className="font-semibold text-white mb-4">Quick Transfer</h3>
+            <div className="flex justify-between gap-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col items-center gap-2 cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center group-hover:border-emerald-500/50 transition-colors">
+                    <img 
+                      src={`https://i.pravatar.cc/100?img=${i + 10}`} 
+                      alt="User" 
+                      className="w-full h-full rounded-full opacity-80 group-hover:opacity-100"
+                    />
+                  </div>
+                  <span className="text-xs text-gray-400 group-hover:text-emerald-400">Alex</span>
+                </div>
+              ))}
+              <div className="flex flex-col items-center gap-2 cursor-pointer group">
+                <div className="w-12 h-12 rounded-full border border-dashed border-white/20 flex items-center justify-center group-hover:border-emerald-500/50 group-hover:text-emerald-400 transition-colors">
+                  +
+                </div>
+                <span className="text-xs text-gray-400">Add</span>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <label className="text-xs text-gray-500 uppercase font-semibold">Amount</label>
+              <div className="flex items-center gap-2 mt-2 p-3 bg-black/40 rounded-xl border border-white/10 focus-within:border-emerald-500/50 transition-colors">
+                <span className="text-gray-400">$</span>
+                <input 
+                  type="text" 
+                  placeholder="0.00" 
+                  className="bg-transparent border-none outline-none text-white w-full font-mono"
+                />
+                <button className="bg-emerald-500 text-black text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-400 transition-colors shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                  Send
+                </button>
+              </div>
+            </div>
+          </NeoCard>
+
         </div>
       </div>
     </div>

@@ -79,7 +79,15 @@ vi.mock('@/components/animations', () => ({
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: (props: any) => React.createElement('div', props),
+    // Strip motion-specific props before rendering a plain div to avoid passing unknown props to DOM
+    div: ({ children, ...rest }: any) => {
+      const { initial, animate, exit, transition, whileHover, whileTap, whileInView, ...dom } = rest
+      return React.createElement('div', dom, children)
+    },
+    button: ({ children, ...rest }: any) => {
+      const { initial, animate, exit, transition, whileHover, whileTap, whileInView, ...dom } = rest
+      return React.createElement('button', dom, children)
+    },
   },
 }))
 
@@ -89,6 +97,16 @@ vi.mock('date-fns', () => ({
 
 vi.mock('lucide-react', () => ({
   ArrowRight: () => React.createElement('div'),
+  ArrowUpRight: () => React.createElement('div'),
+  ArrowDownRight: () => React.createElement('div'),
+  Calendar: () => React.createElement('div'),
+  Wallet: () => React.createElement('div'),
+  Users: () => React.createElement('div'),
+  CreditCard: () => React.createElement('div'),
+  TrendingUp: () => React.createElement('div'),
+  ChevronDown: () => React.createElement('div'),
+  ChevronRight: () => React.createElement('div'),
+  ArrowDownLeft: () => React.createElement('div'),
 }))
 
 vi.mock('next/link', () => ({
@@ -105,14 +123,16 @@ describe('Dashboard Page', () => {
     expect(container.firstChild).toBeInTheDocument()
   })
 
-  it('should display stats grid', () => {
+  it('should display a set of stat cards', () => {
     render(<DashboardPage />)
-    expect(screen.getByTestId('stats-grid')).toBeInTheDocument()
+    // Stat cards are rendered as multiple elements with data-testid 'stat-card'
+    const statCards = screen.getAllByTestId('stat-card')
+    expect(statCards.length).toBeGreaterThan(0)
   })
 
-  it('should display balance card', () => {
+  it('should display the cards preview', () => {
     render(<DashboardPage />)
-    expect(screen.getByTestId('balance-card')).toBeInTheDocument()
+    expect(screen.getByText('My Cards')).toBeInTheDocument()
   })
 
   it('should display recent transactions', () => {
@@ -120,19 +140,21 @@ describe('Dashboard Page', () => {
     expect(screen.getByTestId('recent-transactions')).toBeInTheDocument()
   })
 
-  it('should display quick actions', () => {
+  it('should display quick transfer area', () => {
     render(<DashboardPage />)
-    expect(screen.getByTestId('quick-actions')).toBeInTheDocument()
+    expect(screen.getByText('Quick Transfer')).toBeInTheDocument()
   })
 
-  it('should display wallet selector', () => {
+  it('should display right column content', () => {
     render(<DashboardPage />)
-    expect(screen.getByTestId('wallet-selector')).toBeInTheDocument()
+    // Right column contains the cards preview and quick transfer
+    expect(screen.getByText('My Cards')).toBeInTheDocument()
   })
 
   it('should render without errors when loading', () => {
     render(<DashboardPage />)
-    expect(screen.getByTestId('stats-grid')).toBeInTheDocument()
+    const statCards = screen.getAllByTestId('stat-card')
+    expect(statCards.length).toBeGreaterThan(0)
   })
 
   it('should display balance history chart', () => {

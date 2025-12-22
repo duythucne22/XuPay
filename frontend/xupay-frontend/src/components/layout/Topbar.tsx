@@ -53,13 +53,13 @@ export function Topbar({ onMenuClick, className }: TopbarProps) {
         </Button>
 
         {/* Page Title */}
-        <div className="hidden sm:block">
+        <div className="block">
           <h1 className="text-lg font-semibold">{activeItem?.label ?? 'Dashboard'}</h1>
         </div>
       </div>
 
       {/* Center Section - Search */}
-      <div className="hidden md:flex flex-1 max-w-md mx-8">
+      <div className="flex flex-1 max-w-md mx-8 min-w-0">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input

@@ -1,140 +1,102 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  Wallet,
-  ArrowRightLeft,
-  Settings,
-  LogOut,
-  FileText,
-  X,
-} from 'lucide-react'
+import { X, Wallet, LayoutDashboard, ArrowLeftRight, Settings, Shield } from 'lucide-react'
 import { motion } from 'framer-motion'
 
-interface SidebarNavProps {
-  onClose?: () => void
+interface SidebarProps {
+  isOpen: boolean
+  onClose: () => void
 }
 
-export function SidebarNav({ onClose }: SidebarNavProps) {
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
 
   const navItems = [
-    {
-      label: 'Dashboard',
-      href: '/dashboard',
-      icon: LayoutDashboard,
-    },
-    {
-      label: 'Transactions',
-      href: '/transactions',
-      icon: ArrowRightLeft,
-    },
-    {
-      label: 'Wallets',
-      href: '/wallets',
-      icon: Wallet,
-    },
-    {
-      label: 'Compliance',
-      href: '/compliance/sars',
-      icon: FileText,
-    },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Wallets', href: '/wallets', icon: Wallet },
+    { name: 'Transactions', href: '/transactions', icon: ArrowLeftRight },
+    { name: 'Security', href: '/security', icon: Shield },
+    { name: 'Settings', href: '/settings', icon: Settings },
   ]
-
-  const secondaryItems = [
-    {
-      label: 'Settings',
-      href: '/settings',
-      icon: Settings,
-    },
-    {
-      label: 'Logout',
-      href: '/logout',
-      icon: LogOut,
-    },
-  ]
-
-  const isActive = (href: string) => {
-    return pathname.startsWith(href)
-  }
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-bold">
-            X
+    <aside
+      className={`
+        fixed top-0 left-0 z-50 h-screen w-64
+        bg-[#0a0a0a]/95 backdrop-blur-xl border-r border-white/5
+        transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}
+    >
+      {/* Sidebar Header */}
+      <div className="h-16 flex items-center justify-between px-6 border-b border-white/5">
+        <Link href="/dashboard" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+            <Wallet className="w-5 h-5 text-emerald-400" />
           </div>
-          <span className="font-bold text-gray-900 dark:text-white">XuPay</span>
-        </div>
-        <button
-          onClick={onClose}
-          className="lg:hidden text-gray-600 dark:text-gray-400"
+          <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            XUPAY
+          </span>
+        </Link>
+        <button 
+          onClick={onClose} 
+          className="lg:hidden p-1 text-gray-400 hover:text-white"
         >
-          <X className="w-5 h-5" />
+          <X size={20} />
         </button>
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+      {/* Nav Links */}
+      <nav className="p-4 space-y-1 mt-4">
         {navItems.map((item) => {
-          const Icon = item.icon
-          const active = isActive(item.href)
-
+          const isActive = pathname === item.href
+          
           return (
             <Link
-              key={item.href}
+              key={item.name}
               href={item.href}
-              onClick={onClose}
+              onClick={() => onClose()} // Close mobile menu on click
+              className={`
+                relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? 'text-white' 
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }
+              `}
             >
-              <motion.div
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  active
-                    ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </motion.div>
+              {/* Active Background Glow */}
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-emerald-500/10 border border-emerald-500/20 rounded-xl"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
+              
+              {/* Icon & Text */}
+              <item.icon className={`relative z-10 w-5 h-5 ${isActive ? 'text-emerald-400' : ''}`} />
+              <span className="relative z-10">{item.name}</span>
             </Link>
           )
         })}
       </nav>
 
-      {/* Secondary Items */}
-      <div className="p-4 space-y-2 border-t border-gray-200 dark:border-slate-700">
-        {secondaryItems.map((item) => {
-          const Icon = item.icon
-          const active = isActive(item.href)
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-            >
-              <motion.div
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  active
-                    ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </motion.div>
-            </Link>
-          )
-        })}
+      {/* Bottom User Section (Optional) */}
+      <div className="absolute bottom-0 w-full p-4 border-t border-white/5">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 transition-colors cursor-pointer">
+          <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-xs">
+            JD
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="text-sm font-medium text-white truncate">John Doe</p>
+            <p className="text-xs text-gray-400 truncate">Pro Account</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </aside>
   )
 }

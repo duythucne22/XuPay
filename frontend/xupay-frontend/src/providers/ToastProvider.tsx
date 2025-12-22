@@ -101,9 +101,9 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       transition={{ duration: 0.2 }}
       className={`
         flex items-start gap-3 p-4 rounded-lg border shadow-lg backdrop-blur-sm
-        min-w-[320px] max-w-[480px]
+        w-[420px] max-w-[480px] min-w-0
         ${toastColors[toast.type]}
-      `}
+      `} 
     >
       <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">

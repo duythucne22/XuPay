@@ -84,7 +84,7 @@ export default function SARsPage() {
       />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         {[
           { label: 'Total SARs', value: stats.total, color: 'bg-blue-50' },
           { label: 'Open', value: stats.open, color: 'bg-red-50' },

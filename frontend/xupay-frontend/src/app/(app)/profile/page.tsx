@@ -138,7 +138,7 @@ export default function ProfilePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {/* First Name */}
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -168,7 +168,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Email */}
-            <div className="md:col-span-2">
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <Mail size={16} /> Email Address
               </label>
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Phone */}
-            <div className="md:col-span-2">
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <Phone size={16} /> Phone Number
               </label>
@@ -196,7 +196,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Address */}
-            <div className="md:col-span-2">
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <MapPin size={16} /> Street Address
               </label>

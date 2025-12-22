@@ -254,7 +254,7 @@ export default function WalletsPage() {
         className="flex items-center justify-between"
       >
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
             Your Wallets
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
