@@ -4,7 +4,11 @@
 // Backend verified: 2025-12-21
 // ============================================================
 
-import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { 
+  AxiosInstance, 
+  AxiosError, 
+  InternalAxiosRequestConfig // [FIX] Changed from AxiosRequestConfig
+} from 'axios';
 
 // ============================================================
 // Config
@@ -106,7 +110,7 @@ export class ApiError extends Error {
 // ============================================================
 // Client
 // ============================================================
-export class PaymentServiceClient {
+export class PaymentServiceClient implements IPaymentServiceClient {
   private client: AxiosInstance;
   private config: ApiConfig;
 
@@ -118,24 +122,51 @@ export class PaymentServiceClient {
       timeout: this.config.timeout,
       headers: { 'Content-Type': 'application/json' },
     });
-
+ 
     // Attach token automatically if present in localStorage
-    this.client.interceptors.request.use((cfg: AxiosRequestConfig) => {
-      const token = this.getToken();
-      if (token && cfg.headers) cfg.headers['Authorization'] = `Bearer ${token}`;
+    this.client.interceptors.request.use((cfg: InternalAxiosRequestConfig) => {
+      try {
+        const token = this.getToken();
+        if (token) {
+          const headers: any = cfg.headers || {};
+          if (typeof headers.set === 'function') {
+            headers.set('Authorization', `Bearer ${token}`);
+          } else {
+            headers['Authorization'] = `Bearer ${token}`;
+            cfg.headers = headers;
+          }
+        }
+      } catch (e) {
+        // don't let header-setting break requests
+        // eslint-disable-next-line no-console
+        console.warn('[PaymentServiceClient] failed to set auth header', e);
+      }
       return cfg;
     });
-
+ 
     // Standardized error handling
     this.client.interceptors.response.use(
       (r) => r,
       (err: AxiosError<ErrorResponse>) => {
+        let apiError: ApiError;
         if (err.response) {
-          const e = new ApiError(err.response.status, err.response.data?.code || 'UNKNOWN_ERROR', err.response.data?.message || err.message, err.response.data);
-          if (this.config.onError) this.config.onError(e);
-          return Promise.reject(e);
+          apiError = new ApiError(
+            err.response.status,
+            err.response.data?.code || 'UNKNOWN_ERROR',
+            err.response.data?.message || err.message,
+            err.response.data
+          );
+        } else {
+          apiError = new ApiError(
+            0,
+            (err.code as string) || 'NETWORK_ERROR',
+            err.message,
+            undefined
+          );
         }
-        return Promise.reject(err);
+ 
+        if (this.config.onError) this.config.onError(apiError);
+        return Promise.reject(apiError);
       }
     );
   }
@@ -207,13 +238,50 @@ export class PaymentServiceClient {
 }
 
 // ============================================================
-// Default singleton helpers and example hooks (commented)
+// CLIENT INTERFACE (for mock swapping)
 // ============================================================
 
-let defaultClient: PaymentServiceClient | null = null;
-export function getPaymentServiceClient(config?: ApiConfig): PaymentServiceClient {
-  if (!defaultClient) defaultClient = new PaymentServiceClient(config);
-  return defaultClient;
+export interface IPaymentServiceClient {
+  transfer(request: TransferRequest): Promise<TransferResponse>;
+  getTransaction(transactionId: string): Promise<TransactionDetailResponse>;
+  getByIdempotencyKey(idempotencyKey: string): Promise<TransferResponse | null>;
+  listTransactions(params?: { userId?: string; page?: number; size?: number }): Promise<{ items: TransactionDetailResponse[]; total?: number }>;
+  createWallet(request: CreateWalletRequest): Promise<CreateWalletResponse>;
+  getWalletByUserId(userId: string): Promise<WalletBalanceResponse>;
+  getWalletBalance(walletId: string): Promise<WalletBalanceResponse>;
+  freezeWallet(walletId: string, request: FreezeWalletRequest): Promise<void>;
+  setToken(token: string): void;
+  clearToken(): void;
+}
+
+// ============================================================
+// Default singleton with mock support
+// ============================================================
+
+let defaultClient: IPaymentServiceClient | null = null;
+
+export function setDefaultPaymentServiceClient(client: IPaymentServiceClient | null): void {
+  defaultClient = client;
+}
+
+export function getPaymentServiceClient(config?: ApiConfig): IPaymentServiceClient {
+  // Return existing client if set
+  if (defaultClient) return defaultClient;
+
+  // Check if we should use mocks
+  const useMocks = process.env.NEXT_PUBLIC_USE_MOCKS === 'true';
+  
+  if (useMocks) {
+    // Lazy load mock client to avoid bundling in production
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { MockPaymentServiceClient } = require('./mockPaymentClient');
+    defaultClient = new MockPaymentServiceClient();
+  } else {
+    defaultClient = new PaymentServiceClient(config);
+  }
+  
+  // [FIX] Added non-null assertion (!) to guarantee return type matches interface
+  return defaultClient!;
 }
 
 export default PaymentServiceClient;

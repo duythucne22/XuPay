@@ -39,9 +39,11 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 // PUBLIC ROUTES (no auth required)
 // ============================================
 
-const PUBLIC_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password']
+const PUBLIC_ROUTES = ['/', '/login', '/register', '/forgot-password', '/reset-password']
 
 function isPublicRoute(pathname: string): boolean {
+  // Exact match for home page
+  if (pathname === '/') return true
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
 }
 

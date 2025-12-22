@@ -4,12 +4,12 @@
    ============================================ */
 
 import type { ReactNode } from 'react'
-import { AppShell } from '@/components/layout'
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
 
 interface AppLayoutProps {
   children: ReactNode
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  return <AppShell>{children}</AppShell>
+  return <DashboardLayout>{children}</DashboardLayout>
 }

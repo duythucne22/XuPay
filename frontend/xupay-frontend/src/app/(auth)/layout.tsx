@@ -4,6 +4,9 @@
    ============================================ */
 
 import type { ReactNode } from 'react'
+import { AuthHeader } from '@/components/layout/AuthHeader'
+import { AuthMarketingPanel } from '@/components/layout/AuthMarketingPanel'
+import { AuthFooter } from '@/components/layout/AuthFooter'
 
 interface AuthLayoutProps {
   children: ReactNode
@@ -11,26 +14,23 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-muted/30 p-4">
-      {/* Logo */}
-      <div className="mb-8 flex items-center gap-3">
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-xupay-primary to-xupay-secondary shadow-lg">
-          <span className="text-white font-bold text-xl">X</span>
-        </div>
-        <span className="text-3xl font-bold bg-gradient-to-r from-xupay-primary to-xupay-secondary bg-clip-text text-transparent">
-          XuPay
-        </span>
-      </div>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
+      {/* Header */}
+      <AuthHeader />
 
-      {/* Auth Content */}
-      <main className="w-full max-w-md">
-        {children}
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col lg:flex-row">
+        {/* Left Side - Form Area */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+          <div className="w-full">{children}</div>
+        </div>
+
+        {/* Right Side - Marketing Panel (Desktop Only) */}
+        <AuthMarketingPanel />
       </main>
 
       {/* Footer */}
-      <footer className="mt-8 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} XuPay. All rights reserved.</p>
-      </footer>
+      <AuthFooter />
     </div>
   )
 }

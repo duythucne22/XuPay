@@ -7,7 +7,20 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
+
+// ============================================
+// MSW INITIALIZATION (only in development)
+// ============================================
+
+if (process.env.NEXT_PUBLIC_USE_MOCKS === 'true' && typeof window !== 'undefined') {
+  // Dynamic import to avoid bundling MSW in production
+  import('@/mocks/browser').then(({ startMockServiceWorker }) => {
+    startMockServiceWorker().catch((error) => {
+      console.error('[MSW] Failed to start:', error);
+    });
+  });
+}
 
 // ============================================
 // QUERY CLIENT CONFIG

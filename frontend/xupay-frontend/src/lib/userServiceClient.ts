@@ -4,7 +4,11 @@
 // Backend Verified: 2025-12-21
 // ============================================================
 
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios, { 
+  AxiosInstance, 
+  AxiosError, 
+  InternalAxiosRequestConfig // [FIX] Changed from AxiosRequestConfig
+} from 'axios';
 
 // ============================================================
 // CONFIGURATION
@@ -202,7 +206,7 @@ export class ApiError extends Error {
 // API CLIENT CLASS
 // ============================================================
 
-export class UserServiceClient {
+export class UserServiceClient implements IUserServiceClient {
   private client: AxiosInstance;
   private config: ApiConfig;
 
@@ -219,10 +223,23 @@ export class UserServiceClient {
 
     // Request interceptor: Attach Token
     this.client.interceptors.request.use(
-      (config) => {
-        const token = this.getToken();
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`;
+      // [FIX] Changed type to InternalAxiosRequestConfig
+      (config: InternalAxiosRequestConfig) => {
+        try {
+          const token = this.getToken();
+          if (token) {
+            const headers: any = config.headers || {};
+            if (typeof headers.set === 'function') {
+              headers.set('Authorization', `Bearer ${token}`);
+            } else {
+              headers['Authorization'] = `Bearer ${token}`;
+              config.headers = headers;
+            }
+          }
+        } catch (e) {
+          // don't let header-setting break requests
+          // eslint-disable-next-line no-console
+          console.warn('[UserServiceClient] failed to set auth header', e);
         }
         return config;
       },
@@ -233,21 +250,27 @@ export class UserServiceClient {
     this.client.interceptors.response.use(
       (response) => response,
       async (error: AxiosError<ErrorResponse>) => {
+        let apiError: ApiError;
+
         if (error.response) {
-          const apiError = new ApiError(
+          apiError = new ApiError(
             error.response.status,
             error.response.data?.code || 'UNKNOWN_ERROR',
             error.response.data?.message || error.message,
             error.response.data
           );
-          
-          if (this.config.onError) {
-            this.config.onError(apiError);
-          }
-          
-          return Promise.reject(apiError);
+        } else {
+          // Network or unknown error -> normalize
+          apiError = new ApiError(
+            0,
+            (error.code as string) || 'NETWORK_ERROR',
+            error.message,
+            undefined
+          );
         }
-        return Promise.reject(error);
+
+        if (this.config.onError) this.config.onError(apiError);
+        return Promise.reject(apiError);
       }
     );
   }
@@ -304,12 +327,12 @@ export class UserServiceClient {
     this.clearToken();
   }
 
-  async validateToken(): Promise<boolean> {
+  async validateToken(): Promise<{ valid: boolean }> {
     try {
       await this.client.get('/api/auth/validate');
-      return true;
+      return { valid: true };
     } catch {
-      return false;
+      return { valid: false };
     }
   }
 
@@ -403,19 +426,70 @@ export class UserServiceClient {
     const response = await this.client.post<KycDocumentResponse>(`/api/kyc/${id}/reject`, request);
     return response.data;
   }
+
+  // Backwards-compatible aliases required by IUserServiceClient
+  async getMyDocuments(): Promise<KycDocumentResponse[]> {
+    return this.getMyKycDocuments();
+  }
+
+  async getDocumentById(id: string): Promise<KycDocumentResponse> {
+    return this.getKycDocument(id);
+  }
 }
 
 // ============================================================
-// EXPORT SINGLETON
+// CLIENT INTERFACE (for mock swapping)
 // ============================================================
 
-let defaultClient: UserServiceClient | null = null;
+export interface IUserServiceClient {
+  register(request: RegisterRequest): Promise<AuthResponse>;
+  login(request: LoginRequest): Promise<AuthResponse>;
+  logout(): Promise<void>;
+  validateToken(): Promise<{ valid: boolean }>;
+  getCurrentUser(): Promise<UserResponse>;
+  getMyProfile(): Promise<ProfileResponse>;
+  updateMyProfile(request: UpdateProfileRequest): Promise<ProfileResponse>;
+  getMyLimits(): Promise<UserLimitsResponse>;
+  getMyDailyUsage(): Promise<DailyUsageResponse>;
+  checkLimit(request: CheckLimitRequest): Promise<LimitCheckResponse>;
+  getMyContacts(): Promise<ContactResponse[]>;
+  addContact(request: AddContactRequest): Promise<ContactResponse>;
+  removeContact(contactId: string): Promise<void>;
+  uploadKycDocument(request: UploadKycDocumentRequest): Promise<KycDocumentResponse>;
+  getMyDocuments(): Promise<KycDocumentResponse[]>;
+  getDocumentById(id: string): Promise<KycDocumentResponse>;
+  setToken(token: string): void;
+  clearToken(): void;
+}
 
-export function getUserServiceClient(config?: ApiConfig): UserServiceClient {
-  if (!defaultClient) {
+// ============================================================
+// EXPORT SINGLETON with mock support
+// ============================================================
+
+let defaultClient: IUserServiceClient | null = null;
+
+export function setDefaultUserServiceClient(client: IUserServiceClient | null): void {
+  defaultClient = client;
+}
+
+export function getUserServiceClient(config?: ApiConfig): IUserServiceClient {
+  // Return existing client if set
+  if (defaultClient) return defaultClient;
+
+  // Check if we should use mocks
+  const useMocks = process.env.NEXT_PUBLIC_USE_MOCKS === 'true';
+  
+  if (useMocks) {
+    // Lazy load mock client to avoid bundling in production
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { MockUserServiceClient } = require('./mockUserClient');
+    defaultClient = new MockUserServiceClient();
+  } else {
     defaultClient = new UserServiceClient(config);
   }
-  return defaultClient;
+  
+  // [FIX] Added non-null assertion (!) because we know defaultClient is assigned above
+  return defaultClient!;
 }
 
 export default UserServiceClient;
