@@ -1,70 +1,106 @@
 /* ============================================
-   XuPay DESIGN TOKENS (CSS Variables)
-   Source: -design-spec-complete.md Section 1
+   XuPay DESIGN TOKENS (CSS Variables) - DARK NEON THEME
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@500;700&family=DM+Mono:wght@400;500&display=swap');
 @import './variables.css';
 @import './animations.css';
 
 /* ============================================
-   ROOT TOKENS (Light Mode Default)
+   ROOT TOKENS (Dark Neon Theme Default)
    ============================================ */
 
 :root {
-  /* Primary Brand Colors */
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-primary-active: #1E40AF;
-  --color-primary-light: #DBEAFE;
+  /* NEON RAINBOW COLOR PALETTE */
+  --color-neon-teal: #22d3ee;
+  --color-neon-teal-hover: #06b6d4;
+  --color-neon-teal-active: #0891b2;
+  --color-neon-teal-light: rgba(34, 211, 238, 0.15);
+  
+  --color-neon-green: #22c55e;
+  --color-neon-green-hover: #16a34a;
+  --color-neon-green-light: rgba(34, 197, 94, 0.15);
+  
+  --color-neon-purple: #a855f7;
+  --color-neon-purple-hover: #9333ea;
+  --color-neon-purple-light: rgba(168, 85, 247, 0.15);
+  
+  --color-neon-red: #fb7185;
+  --color-neon-red-hover: #f43f5e;
+  --color-neon-red-light: rgba(251, 113, 133, 0.15);
+  
+  --color-neon-yellow: #fbbf24;
+  --color-neon-yellow-hover: #f59e0b;
+  --color-neon-yellow-light: rgba(251, 191, 36, 0.15);
+  
+  --color-neon-pink: #ec4899;
+  --color-neon-pink-hover: #db2777;
+  --color-neon-pink-light: rgba(236, 72, 153, 0.15);
+
+  /* Primary Brand Colors (Neon Teal as primary) */
+  --color-primary: var(--color-neon-teal);
+  --color-primary-hover: var(--color-neon-teal-hover);
+  --color-primary-active: var(--color-neon-teal-active);
+  --color-primary-light: var(--color-neon-teal-light);
 
   /* Semantic Status Colors */
-  --color-success: #22C55E;
-  --color-success-hover: #16A34A;
-  --color-success-light: #DCFCE7;
+  --color-success: var(--color-neon-green);
+  --color-success-hover: var(--color-neon-green-hover);
+  --color-success-light: var(--color-neon-green-light);
 
-  --color-danger: #EF4444;
-  --color-danger-hover: #DC2626;
-  --color-danger-light: #FEE2E2;
+  --color-danger: var(--color-neon-red);
+  --color-danger-hover: var(--color-neon-red-hover);
+  --color-danger-light: var(--color-neon-red-light);
 
-  --color-warning: #F59E0B;
-  --color-warning-hover: #D97706;
-  --color-warning-light: #FEF3C7;
+  --color-warning: var(--color-neon-yellow);
+  --color-warning-hover: var(--color-neon-yellow-hover);
+  --color-warning-light: var(--color-neon-yellow-light);
 
-  --color-info: #3B82F6;
-  --color-info-light: #EFF6FF;
+  --color-info: var(--color-neon-purple);
+  --color-info-hover: var(--color-neon-purple-hover);
+  --color-info-light: var(--color-neon-purple-light);
 
-  /* Neutral/Grayscale */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F8FAFC;
-  --color-bg-tertiary: #F1F5F9;
+  /* Dark Backgrounds */
+  --color-bg-primary: #020617;        /* Dark black */
+  --color-bg-secondary: #0f172a;      /* Navy */
+  --color-bg-tertiary: #1e293b;       /* Darker navy */
 
-  --color-surface: #FFFFFF;
-  --color-surface-hover: #F9FAFB;
+  --color-surface: #1e293b;
+  --color-surface-hover: #334155;
 
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94A3B8;
-  --color-text-inverse: #FFFFFF;
+  /* Text Colors */
+  --color-text-primary: #f8fafc;      /* Bright white */
+  --color-text-secondary: #cbd5e1;    /* Light gray */
+  --color-text-muted: #64748b;        /* Muted blue-gray */
+  --color-text-inverse: #020617;      /* Black for contrast */
 
-  --color-border-light: #E2E8F0;
-  --color-border-default: #CBD5E1;
-  --color-border-strong: #94A3B8;
+  /* Borders with neon glow effects */
+  --color-border-light: #334155;
+  --color-border-default: #475569;
+  --color-border-strong: #64748b;
+  --color-border-neon: rgba(34, 211, 238, 0.3); /* Neon teal glow */
 
   /* Sidebar & Navigation */
-  --color-sidebar-bg: #0F172A;
-  --color-sidebar-text: #E2E8F0;
-  --color-sidebar-hover: #1E293B;
-  --color-sidebar-active: #2563EB;
+  --color-sidebar-bg: #0f172a;
+  --color-sidebar-text: #cbd5e1;
+  --color-sidebar-hover: rgba(34, 211, 238, 0.1); /* Neon teal tint */
+  --color-sidebar-active: var(--color-neon-teal);
 
   /* Accessibility: RGB versions for opacity */
-  --color-primary-rgb: 37, 99, 235;
-  --color-success-rgb: 34, 197, 94;
-  --color-danger-rgb: 239, 68, 68;
-  --color-warning-rgb: 245, 158, 11;
+  --color-neon-teal-rgb: 34, 211, 238;
+  --color-neon-green-rgb: 34, 197, 94;
+  --color-neon-purple-rgb: 168, 85, 247;
+  --color-neon-red-rgb: 251, 113, 133;
+  --color-neon-yellow-rgb: 251, 191, 36;
+  --color-neon-pink-rgb: 236, 72, 153;
+
+  --color-primary-rgb: var(--color-neon-teal-rgb);
+  --color-success-rgb: var(--color-neon-green-rgb);
+  --color-danger-rgb: var(--color-neon-red-rgb);
+  --color-warning-rgb: var(--color-neon-yellow-rgb);
+  --color-info-rgb: var(--color-neon-purple-rgb);
 
   /* ============================================
-     TYPOGRAPHY SCALE
+     TYPOGRAPHY SCALE - ENHANCED FOR READABILITY
      ============================================ */
 
   /* Font Family */
@@ -73,32 +109,36 @@
   --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono',
     monospace;
 
-  /* Font Sizes */
-  --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-lg: 1.125rem; /* 18px */
-  --font-size-xl: 1.25rem; /* 20px */
-  --font-size-2xl: 1.5rem; /* 24px */
-  --font-size-3xl: 1.875rem; /* 30px */
-  --font-size-4xl: 2.25rem; /* 36px */
+  /* ENHANCED Font Sizes - Larger for better readability */
+  --font-size-xs: 0.875rem;     /* 14px (was 12px) */
+  --font-size-sm: 1rem;         /* 16px (was 14px) */
+  --font-size-base: 1.125rem;   /* 18px (was 16px) - Main body text */
+  --font-size-lg: 1.25rem;      /* 20px (was 18px) */
+  --font-size-xl: 1.5rem;       /* 24px (was 20px) */
+  --font-size-2xl: 1.875rem;    /* 30px (was 24px) */
+  --font-size-3xl: 2.25rem;     /* 36px (was 30px) */
+  --font-size-4xl: 3rem;        /* 48px (was 36px) */
+  --font-size-5xl: 3.75rem;     /* 60px - Added for large displays */
+  --font-size-6xl: 4.5rem;      /* 72px - Added for hero sections */
 
   /* Font Weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800; /* Added for extra emphasis */
 
-  /* Line Heights */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  --line-height-loose: 2;
+  /* Line Heights - Increased for better readability */
+  --line-height-tight: 1.3;
+  --line-height-normal: 1.6;    /* Increased from 1.5 */
+  --line-height-relaxed: 1.8;   /* Increased from 1.75 */
+  --line-height-loose: 2.1;     /* Increased from 2 */
 
   /* Letter Spacing */
   --letter-spacing-tight: -0.01em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em; /* Added for display text */
 
   /* ============================================
      SPACING SCALE (8px base unit)
@@ -112,24 +152,35 @@
   --space-8: 2rem; /* 32px */
   --space-12: 3rem; /* 48px */
   --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px - Added */
+  --space-24: 6rem; /* 96px - Added */
 
   /* Border Radius */
   --radius-sm: 0.375rem; /* 6px */
   --radius-base: 0.5rem; /* 8px */
   --radius-md: 0.75rem; /* 12px */
   --radius-lg: 1rem; /* 16px */
+  --radius-xl: 1.5rem; /* 24px - Added */
   --radius-full: 9999px; /* Fully rounded */
 
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1),
-    0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1),
-    0 4px 6px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1),
-    0 10px 10px rgba(0, 0, 0, 0.04);
+  /* NEON GLOW SHADOWS */
+  --shadow-neon-teal: 0 0 30px rgba(34, 211, 238, 0.3);
+  --shadow-neon-green: 0 0 30px rgba(34, 197, 94, 0.3);
+  --shadow-neon-purple: 0 0 30px rgba(168, 85, 247, 0.3);
+  --shadow-neon-red: 0 0 30px rgba(251, 113, 133, 0.3);
+  --shadow-neon-yellow: 0 0 30px rgba(251, 191, 36, 0.3);
+  --shadow-neon-pink: 0 0 30px rgba(236, 72, 153, 0.3);
+  
+  /* Base Shadows */
+  --shadow-xs: 0 1px 2px rgba(34, 211, 238, 0.05);
+  --shadow-sm: 0 1px 3px rgba(34, 211, 238, 0.1),
+    0 1px 2px rgba(34, 211, 238, 0.06);
+  --shadow-md: 0 4px 6px rgba(34, 211, 238, 0.1),
+    0 2px 4px rgba(34, 211, 238, 0.06);
+  --shadow-lg: 0 10px 15px rgba(34, 211, 238, 0.1),
+    0 4px 6px rgba(34, 211, 238, 0.05);
+  --shadow-xl: 0 20px 25px rgba(34, 211, 238, 0.1),
+    0 10px 10px rgba(34, 211, 238, 0.04);
 
   /* Transitions */
   --duration-fast: 150ms;
@@ -141,55 +192,36 @@
 }
 
 /* ============================================
-   DARK MODE (Respects prefers-color-scheme)
+   LIGHT MODE (Alternative for theme toggle)
    ============================================ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-primary: #0F172A;
-    --color-bg-secondary: #1E293B;
-    --color-bg-tertiary: #334155;
+[data-theme='light'] {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
 
-    --color-surface: #1E293B;
-    --color-surface-hover: #334155;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f9fafb;
 
-    --color-text-primary: #F8FAFC;
-    --color-text-secondary: #CBD5E1;
-    --color-text-muted: #64748B;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
 
-    --color-border-light: #334155;
-    --color-border-default: #475569;
-    --color-border-strong: #64748B;
+  --color-border-light: #e2e8f0;
+  --color-border-default: #cbd5e1;
+  --color-border-strong: #94a3b8;
 
-    --color-sidebar-bg: #020617;
-    --color-sidebar-text: #CBD5E1;
-    --color-sidebar-hover: #1E293B;
-  }
-}
-
-/* ============================================
-   MANUAL DARK MODE OVERRIDE (for theme toggle)
-   ============================================ */
-
-[data-theme='dark'] {
-  --color-bg-primary: #0F172A;
-  --color-bg-secondary: #1E293B;
-  --color-bg-tertiary: #334155;
-
-  --color-surface: #1E293B;
-  --color-surface-hover: #334155;
-
-  --color-text-primary: #F8FAFC;
-  --color-text-secondary: #CBD5E1;
-  --color-text-muted: #64748B;
-
-  --color-border-light: #334155;
-  --color-border-default: #475569;
-  --color-border-strong: #64748B;
-
-  --color-sidebar-bg: #020617;
-  --color-sidebar-text: #CBD5E1;
-  --color-sidebar-hover: #1E293B;
+  /* Keep neon colors but adjust shadows for light mode */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1),
+    0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1),
+    0 10px 10px rgba(0, 0, 0, 0.04);
 }
 
 /* ============================================
@@ -206,20 +238,21 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 100%; /* Base 16px for rem calculations */
 }
 
 body {
   font-family: 'Inter', var(--font-family-sans);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  font-size: var(--font-size-base); /* Now 18px */
+  line-height: var(--line-height-normal); /* Now 1.6 */
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
-  transition: background-color var(--duration-normal),
-    color var(--duration-normal);
+  transition: background-color var(--duration-normal) var(--easing-standard),
+    color var(--duration-normal) var(--easing-standard);
 }
 
 /* ============================================
-   TYPOGRAPHY BASE
+   TYPOGRAPHY BASE - ENHANCED
    ============================================ */
 
 h1,
@@ -233,40 +266,107 @@ h6 {
   line-height: var(--line-height-tight);
   color: var(--color-text-primary);
   letter-spacing: var(--letter-spacing-tight);
-}
-
-h1 {
-  font-size: var(--font-size-4xl);
-}
-h2 {
-  font-size: var(--font-size-3xl);
-}
-h3 {
-  font-size: var(--font-size-2xl);
-}
-h4 {
-  font-size: var(--font-size-xl);
-}
-h5 {
-  font-size: var(--font-size-lg);
-}
-h6 {
-  font-size: var(--font-size-base);
-}
-
-p {
   margin-bottom: var(--space-4);
 }
 
+h1 {
+  font-size: var(--font-size-4xl); /* Now 48px */
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(135deg, var(--color-neon-teal) 0%, var(--color-neon-purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: var(--space-6);
+}
+
+h2 {
+  font-size: var(--font-size-3xl); /* Now 36px */
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(135deg, var(--color-neon-teal) 0%, var(--color-neon-green) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: var(--space-4);
+}
+
+h3 {
+  font-size: var(--font-size-2xl); /* Now 30px */
+  color: var(--color-neon-teal);
+  margin-bottom: var(--space-3);
+}
+
+h4 {
+  font-size: var(--font-size-xl); /* Now 24px */
+  color: var(--color-neon-purple);
+  margin-bottom: var(--space-3);
+}
+
+h5 {
+  font-size: var(--font-size-lg); /* Now 20px */
+  color: var(--color-neon-green);
+  margin-bottom: var(--space-2);
+}
+
+h6 {
+  font-size: var(--font-size-base); /* Now 18px */
+  color: var(--color-neon-yellow);
+  margin-bottom: var(--space-2);
+}
+
+/* Large display sizes for hero sections */
+.display-1 {
+  font-size: var(--font-size-6xl); /* 72px */
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.1;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.display-2 {
+  font-size: var(--font-size-5xl); /* 60px */
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.15;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: var(--space-4);
+  line-height: var(--line-height-relaxed); /* 1.8 for paragraphs */
+  font-size: var(--font-size-base); /* 18px */
+}
+
+/* Lead paragraph for emphasis */
+.lead {
+  font-size: var(--font-size-lg); /* 20px */
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
 small {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-sm); /* Now 16px */
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
 }
 
 code,
 pre,
 .number-display {
   font-family: 'DM Mono', var(--font-family-mono);
-  font-size: calc(var(--font-size-base) * 0.95);
+  font-size: calc(var(--font-size-base) * 0.9); /* Slightly smaller for code */
+  background-color: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--color-border-neon);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3); /* Increased padding */
+  line-height: var(--line-height-normal);
+  box-shadow: var(--shadow-neon-teal);
+}
+
+pre {
+  font-size: var(--font-size-sm); /* 16px for code blocks */
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  overflow-x: auto;
 }
 
 /* ============================================
@@ -274,19 +374,24 @@ pre,
    ============================================ */
 
 a {
-  color: var(--color-primary);
+  color: var(--color-neon-teal);
   text-decoration: none;
-  transition: color var(--duration-fast) var(--easing-standard);
+  transition: all var(--duration-fast) var(--easing-standard);
+  position: relative;
+  font-size: inherit; /* Inherit parent font size */
+  line-height: inherit;
 }
 
 a:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-neon-teal-hover);
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-neon-teal);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-neon-teal);
 }
 
 /* ============================================
@@ -294,16 +399,18 @@ a:focus-visible {
    ============================================ */
 
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-neon-teal);
   outline-offset: 2px;
+  box-shadow: var(--shadow-neon-teal);
 }
 
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-neon-teal);
   outline-offset: 2px;
+  box-shadow: var(--shadow-neon-teal);
 }
 
 /* ============================================
@@ -319,21 +426,49 @@ textarea:focus-visible {
   }
 }
 
+@keyframes pulse-neon {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
+  }
+}
+
+@keyframes glow-rainbow {
+  0% {
+    box-shadow: var(--shadow-neon-teal);
+  }
+  25% {
+    box-shadow: var(--shadow-neon-purple);
+  }
+  50% {
+    box-shadow: var(--shadow-neon-green);
+  }
+  75% {
+    box-shadow: var(--shadow-neon-pink);
+  }
+  100% {
+    box-shadow: var(--shadow-neon-teal);
+  }
+}
+
 .skeleton {
   animation: shimmer 2s infinite;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, 
+    #334155 25%, 
+    rgba(34, 211, 238, 0.3) 50%, 
+    #334155 75%
+  );
   background-size: 1000px 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  .skeleton {
-    background: linear-gradient(
-      90deg,
-      #334155 25%,
-      #475569 50%,
-      #334155 75%
-    );
-  }
+.neon-glow {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+.rainbow-glow {
+  animation: glow-rainbow 8s ease-in-out infinite;
 }
 
 /* ============================================
@@ -347,6 +482,83 @@ textarea:focus-visible {
   max-width: 1280px;
   padding-left: var(--space-4);
   padding-right: var(--space-4);
+}
+
+/* Text size utilities */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+.text-5xl { font-size: var(--font-size-5xl); }
+.text-6xl { font-size: var(--font-size-6xl); }
+
+/* Line height utilities */
+.leading-tight { line-height: var(--line-height-tight); }
+.leading-normal { line-height: var(--line-height-normal); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+.leading-loose { line-height: var(--line-height-loose); }
+
+/* Font weight utilities */
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+
+/* Neon border utility */
+.neon-border {
+  border: 1px solid var(--color-border-neon);
+  box-shadow: var(--shadow-neon-teal);
+}
+
+/* Glow utilities */
+.glow-teal {
+  box-shadow: var(--shadow-neon-teal) !important;
+}
+
+.glow-green {
+  box-shadow: var(--shadow-neon-green) !important;
+}
+
+.glow-purple {
+  box-shadow: var(--shadow-neon-purple) !important;
+}
+
+.glow-red {
+  box-shadow: var(--shadow-neon-red) !important;
+}
+
+.glow-yellow {
+  box-shadow: var(--shadow-neon-yellow) !important;
+}
+
+.glow-pink {
+  box-shadow: var(--shadow-neon-pink) !important;
+}
+
+/* Gradient text utilities */
+.text-gradient-teal-purple {
+  background: linear-gradient(135deg, var(--color-neon-teal) 0%, var(--color-neon-purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-rainbow {
+  background: linear-gradient(135deg, 
+    var(--color-neon-teal) 0%, 
+    var(--color-neon-green) 25%, 
+    var(--color-neon-yellow) 50%, 
+    var(--color-neon-pink) 75%, 
+    var(--color-neon-purple) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Respect prefers-reduced-motion */
@@ -365,8 +577,8 @@ textarea:focus-visible {
    ============================================ */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -374,16 +586,143 @@ textarea:focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
+  background: linear-gradient(135deg, 
+    var(--color-neon-teal) 0%, 
+    var(--color-neon-purple) 100%
+  );
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
+  background: linear-gradient(135deg, 
+    var(--color-neon-green) 0%, 
+    var(--color-neon-pink) 100%
+  );
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
 }
 
 /* Firefox */
 * {
-  scrollbar-color: var(--color-border-default) var(--color-bg-secondary);
+  scrollbar-color: linear-gradient(135deg, 
+    var(--color-neon-teal) 0%, 
+    var(--color-neon-purple) 100%
+  ) var(--color-bg-secondary);
   scrollbar-width: thin;
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+@media (max-width: 768px) {
+  :root {
+    /* Slightly smaller font sizes for mobile */
+    --font-size-base: 1rem;     /* 16px on mobile */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 1.75rem;   /* 28px */
+    --font-size-4xl: 2rem;      /* 32px */
+    --font-size-5xl: 2.5rem;    /* 40px */
+    --font-size-6xl: 3rem;      /* 48px */
+  }
+  
+  .container {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    /* Minimal sizes for very small screens */
+    --font-size-base: 0.9375rem; /* 15px */
+    --font-size-4xl: 1.75rem;    /* 28px */
+    --font-size-5xl: 2rem;       /* 32px */
+    --font-size-6xl: 2.25rem;    /* 36px */
+  }
+}
+
+/* ============================================
+   BUTTON STYLES (Optional - can be in separate component CSS)
+   ============================================ */
+
+.btn-neon {
+  background: linear-gradient(135deg, 
+    var(--color-neon-teal) 0%, 
+    var(--color-neon-purple) 100%
+  );
+  border: none;
+  color: var(--color-text-inverse);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-neon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+.btn-neon:active {
+  transform: translateY(0);
+}
+
+.btn-neon::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg);
+  transition: all var(--duration-normal) var(--easing-standard);
+}
+
+.btn-neon:hover::after {
+  animation: shimmer 1s ease-in-out;
+}
+
+/* ============================================
+   FORM ELEMENTS (Enhanced for readability)
+   ============================================ */
+
+input,
+textarea,
+select {
+  font-size: var(--font-size-base);
+  font-family: 'Inter', var(--font-family-sans);
+  padding: var(--space-3);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border-default);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  transition: all var(--duration-fast) var(--easing-standard);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-neon-teal);
+  box-shadow: var(--shadow-neon-teal);
+  outline: none;
+}
+
+label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+  display: block;
 }
