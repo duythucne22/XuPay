@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XUPAY - Secure Financial Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
+        
+        .password-strength {
+            height: 6px;
+        }
+        
+        .password-strength-fill { }
+        
+        .glass-card { }
+        
+        @media (max-width: 768px) { }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="w-full py-4 px-6 flex justify-between items-center border-b border-gray-200">
+        <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-md mr-2"></div>
+            <h1 class="text-lg font-semibold">XUPAY</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="/" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
+            <a href="/transactions" class="text-sm text-gray-600 hover:text-blue-600">Transactions</a>
+            <a href="/login" class="text-sm text-gray-600 hover:text-blue-600">Login</a>
+            <a href="/register" class="text-sm text-gray-600 hover:text-blue-600">Register</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col md:flex-row">
+        <!-- Left Side - Form Card -->
+        <div class="w-full md:w-1/2 flex items-center justify-center p-6">
+            <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Sign in to XUPAY</h2>
+                <p class="text-sm text-gray-500 mb-6">Secure access to your financial dashboard</p>
+
+                <form action="/api/auth/login" method="post" class="space-y-4" id="loginForm">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input name="email" data-testid="email-input" type="email" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="you@example.com" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input name="password" data-testid="password-input" type="password" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Enter your password" />
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="inline-flex items-center text-sm text-gray-600">
+                            <input type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+                            <span class="ml-2">Remember password</span>
+                        </label>
+
+                        <a href="#" class="text-sm text-blue-600">Forgot Password?</a>
+                    </div>
+
+                    <div>
+                        <button data-testid="submit-button" type="submit" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-medium">Sign in</button>
+                    </div>
+
+                    <div class="text-sm text-gray-600 text-center">
+                        Don't have an account? <a href="/register" class="text-blue-600 font-medium">Create one</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side - Marketing Panel (Desktop Only) -->
+        <div class="desktop-only hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-50 to-indigo-50 items-center justify-center p-12">
+            <div class="max-w-lg">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Secure. Fast. Reliable.</h2>
+                <p class="text-gray-600 mb-6">Manage your wallets, transactions, and identity verification in one place. Trusted by thousands of users worldwide.</p>
+                <ul class="space-y-2 text-gray-700">
+                    <li>✓ Bank-level encryption</li>
+                    <li>✓ Verified business use</li>
+                    <li>✓ 24/7 fraud monitoring</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-6 px-6 border-t border-gray-200 text-center text-sm text-gray-500">
+        <p>© 2025 XUPAY. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Minimal client validation (keeps it light and simple)
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    // Let native HTML validation run; we can add extra checks here if needed
+                });
+            }
+        });
+    </script>
+</body>
+</html>

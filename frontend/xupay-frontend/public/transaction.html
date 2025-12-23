@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - XUPAY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+        .transaction-row { transition: all 0.2s ease; }
+        .transaction-row:hover { background-color: #f3f4f6; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; text-transform: uppercase; }
+        .status-success { background-color: #d4edda; color: #155724; }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-failed { background-color: #f8d7da; color: #721c24; }
+        .type-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 8px; }
+        .type-sent { background-color: #f8d7da; color: #721c24; }
+        .type-received { background-color: #d4edda; color: #155724; }
+        .skeleton { animation: pulse 1.5s infinite ease-in-out; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 0.9; } 100% { opacity: 0.6; } }
+        .sticky-header { position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        @media (max-width: 768px) { .desktop-only { display: none; } }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <header class="w-full py-4 px-6 flex justify-between items-center border-b border-gray-200 bg-white">
+        <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-md mr-2"></div>
+            <h1 class="text-xl font-bold text-gray-900">XUPAY</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="/" class="text-sm text-gray-600 hover:text-blue-600">Help</a>
+            <a href="/" class="text-sm text-gray-600 hover:text-blue-600">Privacy</a>
+            <a href="/" class="text-sm text-gray-600 hover:text-blue-600">Terms</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold text-gray-900">Transactions</h1>
+                <p class="text-gray-600">All payments across your wallets</p>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                <div class="relative">
+                    <select class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option>Last 30 days</option>
+                        <option>Last 7 days</option>
+                        <option>Last 3 months</option>
+                        <option>Custom range</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <select class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option>All wallets</option>
+                        <option>Main Wallet</option>
+                        <option>Secondary Wallet</option>
+                        <option>Crypto Wallet</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">All</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">Sent</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">Received</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200">Failed</button>
+                </div>
+            </div>
+        </div>
+        <div class="mb-6">
+            <div class="relative">
+                <input type="text" placeholder="Search by name, amount, reference..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <p class="text-sm text-gray-500">Total sent (30d)</p>
+                <p class="text-2xl font-bold text-gray-900">$2,450.00</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <p class="text-sm text-gray-500">Total received (30d)</p>
+                <p class="text-2xl font-bold text-gray-900">$3,890.00</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <p class="text-sm text-gray-500">Number of transactions</p>
+                <p class="text-2xl font-bold text-gray-900">24</p>
+            </div>
+        </div>
+        <div class="desktop-only">
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div class="sticky-header px-6 py-3 border-b border-gray-200 bg-gray-50">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-2 font-medium text-gray-600">Date & Time</div>
+                        <div class="col-span-3 font-medium text-gray-600">Description</div>
+                        <div class="col-span-2 font-medium text-gray-600">Wallet / Currency</div>
+                        <div class="col-span-1 font-medium text-gray-600">Type</div>
+                        <div class="col-span-2 font-medium text-gray-600 text-right">Amount</div>
+                        <div class="col-span-1 font-medium text-gray-600">Status</div>
+                        <div class="col-span-1"></div>
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <!-- sample rows preserved from template -->
+                    <div class="transaction-row px-6 py-4 hover:bg-gray-50 cursor-pointer">
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-2"><p class="font-medium">02 Apr 2025</p><p class="text-xs text-gray-500">8:15 am</p></div>
+                            <div class="col-span-3"><p class="font-medium">Meta Quest 3</p><p class="text-sm text-gray-500">512GB • White</p></div>
+                            <div class="col-span-2"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Main Wallet • USD</span></div>
+                            <div class="col-span-1"><div class="type-icon type-sent"></div></div>
+                            <div class="col-span-2 text-right"><p class="font-medium text-red-600">-$499.00</p><p class="text-xs text-gray-500">+0.5% fee</p></div>
+                            <div class="col-span-1"><span class="status-badge status-success">Success</span></div>
+                            <div class="col-span-1 text-right"><button class="text-gray-400 hover:text-gray-600">•••</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden">
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-4 transaction-row hover:bg-gray-50 cursor-pointer">
+                    <div class="flex justify-between mb-2"><div class="flex items-center"><div class="type-icon type-sent mr-2"></div><span class="font-medium">Meta Quest 3</span></div><div class="text-right"><p class="font-medium text-red-600">-$499.00</p><span class="status-badge status-success">Success</span></div></div>
+                    <div class="flex justify-between text-sm text-gray-500 mb-2"><span>02 Apr 2025 • 8:15 am</span><span>512GB • White</span></div>
+                    <div class="flex justify-between text-sm"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Main Wallet • USD</span><button class="text-gray-400 hover:text-gray-600">•••</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-6 text-center"><button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Load more transactions</button></div>
+    </main>
+    <footer class="w-full py-6 px-6 border-t border-gray-200 text-center text-sm text-gray-500 mt-8"><p>© 2025 XUPAY. All rights reserved.</p></footer>
+    <script>document.addEventListener('DOMContentLoaded', function() { const rows = document.querySelectorAll('.transaction-row'); rows.forEach(r=>{r.addEventListener('mouseenter',()=>{r.style.transform='translateY(-2px)';r.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.1)';});r.addEventListener('mouseleave',()=>{r.style.transform='translateY(0)';r.style.boxShadow='none';});});});</script>
+</body>
+</html>

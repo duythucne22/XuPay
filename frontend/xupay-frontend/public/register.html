@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XUPAY - Create an Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="w-full py-4 px-6 flex justify-between items-center border-b border-gray-200">
+        <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-md mr-2"></div>
+            <h1 class="text-lg font-semibold">XUPAY</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="/" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
+            <a href="/transactions" class="text-sm text-gray-600 hover:text-blue-600">Transactions</a>
+            <a href="/login" class="text-sm text-gray-600 hover:text-blue-600">Login</a>
+            <a href="/register" class="text-sm text-gray-600 hover:text-blue-600">Register</a>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row">
+        <div class="w-full md:w-1/2 flex items-center justify-center p-6">
+            <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Create your account</h2>
+                <p class="text-sm text-gray-500 mb-6">Join XUPAY to manage your finances securely</p>
+
+                <form action="/api/auth/register" method="post" class="space-y-4" id="registerForm">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">First name</label>
+                        <input name="firstName" type="text" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Last name</label>
+                        <input name="lastName" type="text" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input name="email" type="email" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input name="password" type="password" required class="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-medium">Create account</button>
+                    </div>
+                    <div class="text-sm text-gray-600 text-center">
+                        Already have an account? <a href="/login" class="text-blue-600 font-medium">Sign in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="desktop-only hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-50 to-indigo-50 items-center justify-center p-12">
+            <div class="max-w-lg">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Get started with XUPAY</h2>
+                <p class="text-gray-600 mb-6">Set up your wallet and start sending or receiving money in minutes.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full py-6 px-6 border-t border-gray-200 text-center text-sm text-gray-500">
+        <p>© 2025 XUPAY. All rights reserved.</p>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+        const form = document.getElementById('registerForm');
+        if (form) { form.addEventListener('submit', function(e){ /* minimal validation */ }); }
+      });
+    </script>
+</body>
+</html>
