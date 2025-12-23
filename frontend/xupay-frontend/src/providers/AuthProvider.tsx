@@ -58,7 +58,8 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const [mounted, setMounted] = useState(false)
+  // Mounted = true when running in browser (avoid synchronous setState in effect)
+  const [mounted] = useState<boolean>(() => typeof window !== 'undefined')
 
   // Get current user from React Query
   const {
@@ -71,32 +72,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Logout mutation
   const logoutMutation = useLogout()
 
-  // Check if we have a token
-  const [hasToken, setHasToken] = useState(false)
+  // Check if we have a token (lazy initializer reads tokenStorage on client)
+  const [hasToken] = useState<boolean>(() => typeof window !== 'undefined' && !!tokenStorage.getAccessToken())
 
-  useEffect(() => {
-    setHasToken(!!tokenStorage.getAccessToken())
-    setMounted(true)
-  }, [])
-
-  // Handle authentication errors (expired token, etc.)
+  // Handle authentication errors (expired token, etc.) — do not call setState here, rely on tokenStorage and redirects
   useEffect(() => {
     if (isError && error && !isPublicRoute(pathname)) {
       // Token is invalid, clear it and redirect to login
       tokenStorage.clearTokens()
-      setHasToken(false)
       router.push('/login')
     }
   }, [isError, error, pathname, router])
 
-  // Redirect logic
+  // Redirect logic — read tokenStorage directly to avoid setState in effects
   useEffect(() => {
     if (!mounted) return
 
     const publicRoute = isPublicRoute(pathname)
+    const tokenPresent = !!tokenStorage.getAccessToken()
 
     // If on protected route without token, redirect to login
-    if (!publicRoute && !hasToken) {
+    if (!publicRoute && !tokenPresent) {
       router.push('/login')
       return
     }
@@ -105,16 +101,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (publicRoute && user) {
       router.push('/dashboard')
     }
-  }, [mounted, hasToken, user, pathname, router])
+  }, [mounted, user, pathname, router])
 
   const logout = useCallback(async () => {
     await logoutMutation.mutateAsync()
-    setHasToken(false)
+    tokenStorage.clearTokens()
     router.push('/login')
   }, [logoutMutation, router])
 
-  // Loading states
-  const isLoading = !mounted || (hasToken && isUserLoading)
+  // Loading states — derive token presence dynamically
+  const isLoading = !mounted || ((!!tokenStorage.getAccessToken()) && isUserLoading)
 
   const value: AuthContextValue = {
     user: user ?? null,

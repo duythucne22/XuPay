@@ -635,7 +635,7 @@ textarea:focus-visible {
 
 /* Enforce desktop min width to avoid layout collapse on narrow viewports */
 html, body {
-  min-width: 1280px;
+  min-width: 1024px;
   overflow-x: hidden;
 }
 

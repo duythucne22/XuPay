@@ -55,7 +55,7 @@ export function AppShell({ children, className }: AppShellProps) {
             className
           )}
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="mx-auto" style={{ maxWidth: 'var(--container-max-width)', padding: 'var(--container-padding-y) var(--container-padding-x)' }}>
             {children}
           </div>
         </main>

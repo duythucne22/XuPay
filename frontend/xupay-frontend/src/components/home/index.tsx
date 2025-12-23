@@ -18,7 +18,7 @@ export default function HomePageContent({
   companyName = 'XuPay',
 }: HomePageProps) {
   return (
-    <div className="min-h-screen font-sans text-gray-200 overflow-x-hidden relative bg-[#0a0a0a]">
+    <div className="min-h-screen font-sans text-[var(--color-text-primary)] overflow-x-hidden relative bg-[var(--color-bg-primary)]">
       {/* Optimization: 
         ParticleBackground is memoized and sits at z-0.
         The gradient overlay sits at z-0.

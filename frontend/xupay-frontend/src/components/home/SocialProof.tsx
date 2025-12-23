@@ -14,7 +14,7 @@ export default function SocialProof() {
             <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
               Recent Media Coverage
             </h2>
-            <button className="px-6 py-3 rounded-full font-medium bg-gradient-to-r from-emerald-500/10 to-cyan-400/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-all">
+            <button className="px-6 py-3 rounded-full font-medium bg-[rgba(var(--color-primary-rgb),0.06)] border border-[rgba(var(--color-primary-rgb),0.12)] text-[var(--color-primary)] hover:bg-[rgba(var(--color-primary-rgb),0.1)] transition-all">
               View All Articles
             </button>
           </div>

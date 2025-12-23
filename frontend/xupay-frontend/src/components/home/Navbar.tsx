@@ -68,27 +68,27 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-[var(--color-bg-secondary)]/95 backdrop-blur-md border-b border-[var(--color-border-neon)] py-4 shadow-[var(--shadow-neon-teal)]' 
-          : 'bg-transparent border-b border-transparent py-6'
+          ? 'bg-[var(--color-bg-secondary)]/95 backdrop-blur-md border-b border-[var(--color-border-neon)] py-6 shadow-[var(--shadow-neon-teal)]' 
+          : 'bg-transparent border-b border-transparent py-8'
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 flex justify-between items-center min-w-0">
+      <div className="container mx-auto px-6 flex justify-between items-center w-full min-w-0">
         
         {/* ================= LEFT SIDE (Logo + Nav) ================= */}
-        <div className="flex items-center gap-12 min-w-0">
+        <div className="flex items-center gap-10 min-w-0 flex-1">
           <Link href="/" className="flex items-center gap-2 cursor-pointer group shrink-0">
             <div className="relative">
               <div className="absolute inset-0 bg-[var(--color-neon-teal)]/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               <Wallet className="text-[var(--color-neon-teal)] relative z-10" size={scrolled ? 28 : 32} />
             </div>
-            <span className={`font-bold bg-gradient-to-r from-[var(--color-neon-teal)] to-[var(--color-neon-purple)] bg-clip-text text-transparent transition-all duration-300 ${
-              scrolled ? 'text-xl' : 'text-2xl'
+            <span className={`font-bold bg-gradient-to-r from-[var(--color-neon-teal)] to-[var(--color-neon-purple)] bg-clip-text text-transparent transition-all duration-300 md:text-3xl lg:text-4xl ${
+              scrolled ? 'text-lg md:text-2xl' : 'text-2xl md:text-3xl'
             }`}>
               {companyName}
             </span>
           </Link>
 
-          <div className="flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-8 flex-1 justify-start overflow-hidden">
             {menuItems.map((item) => (
               <div
                 key={item.label}
@@ -98,7 +98,7 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
               >
                 {item.dropdown ? (
                   <>
-                    <button className="flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors text-[15px] font-medium focus:outline-none py-2">
+                    <button className="flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors text-base md:text-lg font-medium focus:outline-none py-2">
                       {item.label}
                       <ChevronDown size={14} className={`text-[var(--color-text-muted)] transition-transform duration-200 ${activeDropdown === item.label ? 'rotate-180' : ''}`} />
                     </button>
@@ -129,7 +129,7 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
                 ) : (
                   <Link
                     href={item.href!}
-                    className="text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors text-[15px] font-medium py-2"
+                    className="text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors text-base md:text-lg font-medium py-2"
                   >
                     {item.label}
                   </Link>
@@ -140,10 +140,10 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
         </div>
 
         {/* ================= RIGHT SIDE (Auth + Actions) ================= */}
-        <div className="flex items-center gap-5 min-w-0">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-surface)] border border-[var(--color-border-neon)]">
-            <Shield size={12} className="text-[var(--color-neon-teal)]" />
-            <span className="text-[10px] text-[var(--color-text-secondary)] font-medium tracking-wide uppercase">Secure</span>
+        <div className="flex items-center gap-6 min-w-0 shrink-0">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(var(--color-success-rgb),0.06)] border border-[rgba(var(--color-success-rgb),0.12)]">
+            <Shield size={12} className="text-[var(--color-success)]" />
+            <span className="text-xs text-[var(--color-text-secondary)] font-medium tracking-wide uppercase">Secure</span>
           </div>
 
           <button
@@ -179,7 +179,7 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
             <>
               <Link 
                 href="/login"
-                className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors"
+                className="text-base font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-neon-teal)] transition-colors"
               >
                 Sign in
               </Link>
@@ -188,7 +188,7 @@ export default function Navbar({ companyName = 'XUPAY' }: NavbarProps) {
                 <motion.button
                   whileHover={{ scale: 1.02, boxShadow: "var(--shadow-neon-teal)" }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold bg-gradient-to-r from-[var(--color-neon-teal)] to-[var(--color-neon-teal-hover)] text-[var(--color-bg-primary)] transition-all text-sm"
+                  className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[var(--color-neon-teal)] to-[var(--color-neon-teal-hover)] text-[var(--color-bg-primary)] transition-all text-base shadow-[0_8px_30px_rgba(var(--color-neon-teal-rgb),0.16)]"
                 >
                   Get a Demo
                   <ArrowRight size={16} />

@@ -61,15 +61,20 @@ export function Container({
   // Per spec: --container-padding-x: 1.5rem, --container-padding-y: 2rem
   const sizeCls = maxWidth ? (SIZE_MAP[size] ?? SIZE_MAP.lg) : SIZE_MAP.full
   const paddingCls = PADDING_MAP[padding] ?? PADDING_MAP.md
-  
+
+  // Minimal CSS variable usage for default (md) padding and lg container max-width
+  const style: React.CSSProperties = {}
+  if (maxWidth && size === 'lg') {
+    style.maxWidth = 'var(--container-max-width)'
+  }
+  if (padding === 'md') {
+    style.padding = 'var(--container-padding-y) var(--container-padding-x)'
+  }
+
   return (
     <div
-      className={cn(
-        'mx-auto',
-        sizeCls,
-        paddingCls,
-        className
-      )}
+      className={cn('mx-auto', sizeCls, paddingCls, className)}
+      style={style}
     >
       {children}
     </div>
