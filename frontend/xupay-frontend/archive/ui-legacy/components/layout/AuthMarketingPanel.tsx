@@ -1,6 +1,7 @@
 'use client'
 
-import { Lock, CheckCircle } from 'lucide-react'
+import { Lock, CheckCircle, ArrowRight } from 'lucide-react'
+import { Icon } from '@/components/ui/Icon'
 
 export function AuthMarketingPanel() {
   const benefits = [
@@ -15,8 +16,8 @@ export function AuthMarketingPanel() {
         {/* Icon Container */}
         <div className="w-24 h-24 mx-auto mb-6 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center">
           <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-lg">
-            <Lock className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-          </div>
+              <Icon as={Lock} size="lg" className="text-blue-600 dark:text-blue-400" />
+            </div>
         </div>
 
         {/* Heading */}
@@ -35,9 +36,9 @@ export function AuthMarketingPanel() {
           {benefits.map((benefit, index) => (
             <li key={index} className="flex items-start gap-3">
               <div className="w-5 h-5 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <CheckCircle className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                <Icon as={CheckCircle} size="xs" className="text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
+              <span className="text-gray-600 dark:text-gray-400">{benefit}</span>
             </li>
           ))}
         </ul>
@@ -49,9 +50,7 @@ export function AuthMarketingPanel() {
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
           >
             Learn more about our security features
-            <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
+            <Icon as={ArrowRight} size="sm" className="ml-1" />
           </a>
         </div>
       </div>

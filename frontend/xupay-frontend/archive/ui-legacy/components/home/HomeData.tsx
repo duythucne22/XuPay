@@ -1,4 +1,5 @@
 import { TrendingUp, Lock, Wallet, Sparkles } from 'lucide-react'
+import { Icon } from '@/components/ui/Icon'
 
 export const heroTexts = [
   "E-Wallet",
@@ -12,10 +13,10 @@ export const heroTexts = [
 ]
 
 export const coreComponents = [
-  { title: "Glass", icon: <TrendingUp size={24} />, description: "Provides real-time visibility and analytics for balances, liquidity, and exposures." },
-  { title: "Guard", icon: <Lock size={24} />, description: "Enforces security, governance, and approval workflows." },
-  { title: "Flow", icon: <Wallet size={24} />, description: "Automates settlements, transfers, and capital movements." },
-  { title: "AI", icon: <Sparkles size={24} />, description: "Delivers forecasting, optimization, and anomaly detection." }
+  { title: "Glass", icon: <Icon as={TrendingUp} size="md" />, description: "Provides real-time visibility and analytics for balances, liquidity, and exposures." },
+  { title: "Guard", icon: <Icon as={Lock} size="md" />, description: "Enforces security, governance, and approval workflows." },
+  { title: "Flow", icon: <Icon as={Wallet} size="md" />, description: "Automates settlements, transfers, and capital movements." },
+  { title: "AI", icon: <Icon as={Sparkles} size="md" />, description: "Delivers forecasting, optimization, and anomaly detection." }
 ]
 
 export const partners = [
