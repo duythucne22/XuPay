@@ -1,0 +1,13 @@
+/* Basic desktop-first styles, dark-mode support via .dark on body */
+:root{--bg:#ffffff;--text:#111827;--muted:#6b7280;--accent:#064e3b}
+body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:var(--text); margin:0}
+.container{max-width:1200px;margin:40px auto;padding:0 16px}
+.header{display:flex;justify-content:space-between;align-items:center}
+.card{background:#fff;border:1px solid #e5e7eb;padding:16px;border-radius:8px}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:6px;text-decoration:none}
+@media (max-width:1024px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+.dark{--bg:#0b1220;--text:#e6eef8;--muted:#94a3b8}
+/* Form styles */
+.form-input{width:100%;padding:10px;border:1px solid #d1d5db;border-radius:6px;margin-top:6px}
+.form-row{margin-bottom:12px}
+.footer{margin-top:48px;text-align:center;color:var(--muted)}

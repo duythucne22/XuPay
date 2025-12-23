@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - XUPAY</title>
+  <link rel="stylesheet" href="/static-site/styles.css">
+</head>
+<body>
+  <main class="container">
+    <div class="grid-3" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center">
+      <section>
+        <h1 style="font-size:48px;margin:0 0 8px">Welcome Back</h1>
+        <p style="color:var(--muted)">Welcome Back, please enter your details</p>
+
+        <form id="loginForm" method="POST" action="/api/auth/login" style="margin-top:18px;max-width:520px">
+          <div class="form-row">
+            <label>Email Address</label>
+            <input class="form-input" name="email" type="email" placeholder="name@example.com" required />
+          </div>
+          <div class="form-row">
+            <label>Password</label>
+            <input class="form-input" name="password" type="password" placeholder="Enter your password" required />
+          </div>
+          <div class="form-row" style="display:flex;justify-content:space-between;align-items:center">
+            <label><input type="checkbox" name="remember"/> Remember Password</label>
+            <a href="/static-site/forgot-password.html">Forgot Password</a>
+          </div>
+          <div class="form-row">
+            <button class="btn" type="submit">Continue</button>
+          </div>
+        </form>
+
+        <div style="margin-top:8px;text-align:center">
+          <p style="margin:8px 0">Or Continue With</p>
+          <div style="font-size:22px">G ○ □ f</div>
+          <div style="margin-top:16px">Don't have an account? <a href="/static-site/register.html">Sign up</a></div>
+        </div>
+      </section>
+
+      <aside>
+        <h2 style="text-align:center;font-size:40px;color:var(--accent);margin:0">WELCOME!</h2>
+        <p style="text-align:center;color:var(--muted)">Bank-grade security for your digital transactions. We're delighted to have you here.</p>
+      </aside>
+    </div>
+    <div class="footer">© 2025 XUPAY</div>
+  </main>
+</body>
+</html>

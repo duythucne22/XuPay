@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Transactions - XUPAY</title>
+  <link rel="stylesheet" href="/static-site/styles.css">
+</head>
+<body>
+  <main class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1 style="margin:0;font-size:28px">Transactions</h1>
+        <p style="color:var(--muted)">All payments across your wallets</p>
+      </div>
+      <div>
+        <input class="form-input" placeholder="Search by name, amount, reference..." style="width:320px" />
+      </div>
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="card"><p class="muted">Total sent (30d)</p><h3>$2,450.00</h3></div>
+      <div class="card"><p class="muted">Total received (30d)</p><h3>$3,890.00</h3></div>
+      <div class="card"><p class="muted">Number of transactions</p><h3>24</h3></div>
+    </div>
+
+    <div style="margin-top:20px" class="card">
+      <div style="display:grid;grid-template-columns:2fr 3fr 2fr 1fr 2fr 1fr 1fr;gap:8px;font-weight:600;color:var(--muted);padding:12px 0;border-bottom:1px solid #eef2f6">
+        <div>Date & Time</div>
+        <div>Description</div>
+        <div>Wallet / Currency</div>
+        <div>Type</div>
+        <div style="text-align:right">Amount</div>
+        <div>Status</div>
+        <div></div>
+      </div>
+
+      <!-- Sample rows -->
+      <div style="display:grid;grid-template-columns:2fr 3fr 2fr 1fr 2fr 1fr 1fr;gap:8px;padding:12px 0;align-items:center;border-bottom:1px solid #f3f4f6">
+        <div>02 Apr 2025 • 8:15 am</div>
+        <div>Meta Quest 3<br><small style="color:var(--muted)">512GB • White</small></div>
+        <div><span style="padding:4px 8px;background:#eef2ff;color:#1e3a8a;border-radius:999px">Main Wallet • USD</span></div>
+        <div>Sent</div>
+        <div style="text-align:right;color:#b91c1c">-$499.00</div>
+        <div><span style="background:#d4edda;color:#155724;padding:4px 8px;border-radius:8px;font-size:12px">Success</span></div>
+        <div style="text-align:right"><button>...</button></div>
+      </div>
+
+      <!-- Add more rows as needed -->
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register - XUPAY</title>
+  <link rel="stylesheet" href="/static-site/styles.css">
+</head>
+<body>
+  <main class="container">
+    <div style="max-width:720px;margin:0 auto">
+      <h1 style="font-size:40px">Create an account</h1>
+      <p style="color:var(--muted)">Join XUPAY to manage payments and wallets</p>
+
+      <form id="registerForm" method="POST" action="/api/auth/register" style="margin-top:18px">
+        <div class="form-row">
+          <label>First Name</label>
+          <input class="form-input" name="firstName" type="text" required />
+        </div>
+        <div class="form-row">
+          <label>Last Name</label>
+          <input class="form-input" name="lastName" type="text" required />
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input class="form-input" name="email" type="email" required />
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input class="form-input" name="password" type="password" required />
+        </div>
+        <div class="form-row">
+          <button class="btn" type="submit">Create account</button>
+        </div>
+      </form>
+
+      <div style="text-align:center;margin-top:16px">Already have an account? <a href="/static-site/login.html">Sign in</a></div>
+    </div>
+  </main>
+</body>
+</html>
