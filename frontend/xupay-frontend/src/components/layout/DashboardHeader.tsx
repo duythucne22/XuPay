@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 h-16 px-6 lg:px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
+    <header className="sticky top-0 z-20 h-16 px-6 lg:px-8 flex items-center justify-between border-b backdrop-blur-md" style={{ backgroundColor: 'rgba(var(--color-bg-primary-rgb), 0.8)', borderBottomColor: 'rgba(var(--color-text-primary-rgb), 0.05)' }}>
       
       {/* Mobile Menu Trigger & Search */}
       <div className="flex items-center gap-4 flex-1">

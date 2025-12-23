@@ -81,7 +81,7 @@ LOW PRIORITY (Secondary):
 └────────────────────────────────────────────┘
 ```
 
-**Key CSS Variables (defined in global.css):**
+**Key CSS Variables (layout tokens now defined in `src/styles/variables.css` and theme tokens in `src/styles/global.css`):**
 
 ```css
 --header-height: 3.5rem;              /* 56px */
@@ -90,6 +90,8 @@ LOW PRIORITY (Secondary):
 --container-padding-x: 1.5rem;        /* 24px (px-6) */
 --container-padding-y: 2rem;          /* 32px (py-8) */
 --transition-duration: 250ms;         /* Standard animation */
+
+Note: `Container` and `AppShell` have been normalized to consume `--container-max-width` and the container padding tokens for consistent layout spacing.
 ```
 
 ***

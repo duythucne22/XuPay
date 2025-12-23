@@ -46,22 +46,22 @@ export function ThemeProvider({
   defaultTheme = 'system',
   storageKey = THEME_STORAGE_KEY,
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme)
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
-  const [mounted, setMounted] = useState(false)
-
-  // Load theme from storage on mount
-  useEffect(() => {
+  // Lazy initialize theme from storage where possible to avoid synchronous setState in effects
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return defaultTheme
     const stored = localStorage.getItem(storageKey) as Theme | null
-    if (stored && ['light', 'dark', 'system'].includes(stored)) {
-      setThemeState(stored)
-    }
-    setMounted(true)
-  }, [storageKey])
+    return stored && ['light', 'dark', 'system'].includes(stored) ? stored : defaultTheme
+  })
 
-  // Resolve system theme and apply to document
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light'
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    return mq.matches ? 'dark' : 'light'
+  })
+
+  // Resolve system theme and apply to document (only run on client)
   useEffect(() => {
-    if (!mounted) return
+    if (typeof window === 'undefined') return
 
     const root = document.documentElement
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -87,15 +87,15 @@ export function ThemeProvider({
     // Listen for system theme changes
     mediaQuery.addEventListener('change', applyTheme)
     return () => mediaQuery.removeEventListener('change', applyTheme)
-  }, [theme, mounted])
+  }, [theme])
 
   const setTheme = (newTheme: Theme) => {
-    localStorage.setItem(storageKey, newTheme)
+    if (typeof window !== 'undefined') localStorage.setItem(storageKey, newTheme)
     setThemeState(newTheme)
   }
 
-  // Avoid hydration mismatch
-  if (!mounted) {
+  // If rendering on server, short-circuit provider to avoid hydration mismatch
+  if (typeof window === 'undefined') {
     return (
       <ThemeContext.Provider value={{ theme: defaultTheme, resolvedTheme: 'light', setTheme }}>
         {children}

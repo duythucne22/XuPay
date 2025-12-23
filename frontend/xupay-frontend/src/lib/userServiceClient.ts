@@ -238,7 +238,7 @@ export class UserServiceClient implements IUserServiceClient {
           }
         } catch (e) {
           // don't let header-setting break requests
-          // eslint-disable-next-line no-console
+           
           console.warn('[UserServiceClient] failed to set auth header', e);
         }
         return config;
@@ -481,7 +481,7 @@ export function getUserServiceClient(config?: ApiConfig): IUserServiceClient {
   
   if (useMocks) {
     // Lazy load mock client to avoid bundling in production
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const { MockUserServiceClient } = require('./mockUserClient');
     defaultClient = new MockUserServiceClient();
   } else {

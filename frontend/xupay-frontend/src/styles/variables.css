@@ -23,6 +23,15 @@
 
   /* Glassmorphic */
   --glass-bg: 255 255 255; /* rgba base */
+
+  /* Layout tokens (kept small and focused) */
+  --header-height: 3.5rem;           /* 56px, global header height */
+  --sidebar-width: 16rem;            /* 256px (w-64), default sidebar */
+  --sidebar-width-sm: 0;             /* hidden on mobile */
+  --container-max-width: 1280px;     /* max-w-7xl */
+  --container-padding-x: 1.5rem;     /* px-6 */
+  --container-padding-y: 2rem;       /* py-8 */
+  --transition-duration: 250ms;      /* standard transitions */
 }
 
 .glass-panel {

@@ -5,26 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon } from 'lucide-react'
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    // Check initial theme from localStorage or system preference
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
     const savedTheme = localStorage.getItem('theme')
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
-    
-    if (shouldBeDark) {
-      document.documentElement.setAttribute('data-theme', 'dark')
-      setIsDark(true)
-    }
-  }, [])
+    return savedTheme === 'dark' || (!savedTheme && prefersDark)
+  })
+
+  const mounted = typeof window !== 'undefined'
 
   const toggleTheme = () => {
     const html = document.documentElement
     const newDarkMode = !isDark
-    
+
     if (newDarkMode) {
       html.setAttribute('data-theme', 'dark')
       localStorage.setItem('theme', 'dark')
@@ -32,15 +25,13 @@ export function ThemeToggle() {
       html.removeAttribute('data-theme')
       localStorage.setItem('theme', 'light')
     }
-    
+
     setIsDark(newDarkMode)
   }
 
-  // Avoid hydration mismatch
+  // Avoid hydration mismatch when rendering on server
   if (!mounted) {
-    return (
-      <div className="p-2 w-9 h-9" />
-    )
+    return <div className="p-2 w-9 h-9" />
   }
 
   return (

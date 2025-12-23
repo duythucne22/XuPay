@@ -5,11 +5,14 @@ import { useEffect, useState } from 'react'
  * Useful for respecting accessibility preferences
  */
 export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  })
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
 
     const handler = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches)

@@ -13,9 +13,9 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
   return (
     <>
       {/* Introducing Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-black to-[#0a0a15] relative overflow-hidden z-10">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] relative overflow-hidden z-10">
         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
-          backgroundImage: `repeating-linear-gradient(0deg, #22c55e 0px, #22c55e 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #22c55e 0px, #22c55e 1px, transparent 1px, transparent 40px)`
+          backgroundImage: `repeating-linear-gradient(0deg, rgba(var(--color-primary-rgb),0.18) 0px, rgba(var(--color-primary-rgb),0.18) 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, rgba(var(--color-primary-rgb),0.18) 0px, rgba(var(--color-primary-rgb),0.18) 1px, transparent 1px, transparent 40px)`
         }} />
         
         <motion.div
@@ -25,10 +25,10 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
           transition={{ duration: 0.8 }}
           className="max-w-5xl mx-auto text-center relative z-10"
         >
-          <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">
-            <Sparkles className="text-emerald-400" size={32} />
+          <div className="w-20 h-20 rounded-full bg-[rgba(var(--color-primary-rgb),0.08)] flex items-center justify-center mx-auto mb-8" aria-hidden>
+            <Sparkles className="text-[var(--color-primary)]" size={32} />
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))' }}>
             Introducing {companyName}
           </h2>
           <p className="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 leading-relaxed">
@@ -44,27 +44,34 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-6xl mx-auto relative z-10"
+          className="max-w-7xl mx-auto relative z-10 px-4"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(90deg, var(--color-success), var(--color-success-light))' }}>
             Foundational Pillars
           </h2>
-          <div className="flex flex-wrap items-stretch justify-between gap-8 mt-16">
-            {coreComponents.map((component, index) => (
-              <FeatureCard
-                key={index}
-                title={component.title}
-                description={component.description}
-                icon={component.icon}
-                className="min-h-[140px] w-full sm:w-[48%] lg:w-[23%]"
-              />
-            ))}
+          <div className="mx-auto max-w-5xl bg-[rgba(var(--color-bg-secondary-rgb),0.02)] border border-[rgba(var(--color-primary-rgb),0.04)] rounded-2xl p-6 mt-8">
+            <div
+              className="grid gap-8 justify-center items-stretch"
+              style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 320px))' }}
+            >
+              {coreComponents.map((component, index) => (
+                <FeatureCard
+                  key={index}
+                  title={component.title}
+                  description={component.description}
+                  icon={component.icon}
+                  className="min-h-[160px] w-full max-w-[320px]"
+                />
+              ))}
+            </div>
           </div>
+
+
         </motion.div>
       </section>
 
       {/* Wealth Management */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#0a0a15] to-black relative overflow-hidden z-10">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)] relative overflow-hidden z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -72,9 +79,9 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto relative z-10"
         >
-          <div className="rounded-3xl p-10 border border-emerald-500/10 bg-black/40 backdrop-blur-xl text-center">
-             <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
-                <Wallet className="text-emerald-400" size={28} />
+          <div className="rounded-3xl p-10 border border-[rgba(var(--color-primary-rgb),0.08)] bg-[rgba(var(--color-primary-rgb),0.03)] backdrop-blur-xl text-center">
+             <div className="w-16 h-16 rounded-full bg-[rgba(var(--color-primary-rgb),0.08)] flex items-center justify-center mx-auto mb-4" aria-hidden>
+                <Wallet className="text-[var(--color-primary)]" size={28} />
               </div>
               <h3 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent mb-8">
                 Wealth Management

@@ -10,7 +10,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-100 font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[var(--color-bg-primary)] text-gray-100 font-sans selection:bg-emerald-500/30">
       
       {/* Mobile Sidebar Overlay (Glass effect) */}
       {isSidebarOpen && (
@@ -29,7 +29,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <MobileSidebar open={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Main Content Area - Offset by Sidebar width (64 = 16rem = 256px) */}
-      <div className="lg:pl-64 flex flex-col min-h-screen transition-all duration-300">
+      <div className="lg:[padding-left:var(--sidebar-width)] flex flex-col min-h-screen transition-all duration-300">
         
         {/* Sticky Header */}
         <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />

@@ -31,9 +31,9 @@ const CustomTooltip = (props: TooltipProps<number, string> & { payload?: any[] }
   if (active && payload && payload.length) {
     const label = payload[0].payload?.name
     return (
-      <div className="bg-[#0a0a0a]/90 backdrop-blur-md border border-white/10 p-3 rounded-xl shadow-xl shadow-black/50">
-        <p className="text-gray-400 text-xs mb-1">{label}</p>
-        <p className="text-emerald-400 font-bold text-lg">
+      <div style={{ backgroundColor: 'rgba(var(--color-bg-primary-rgb), 0.9)', borderColor: 'rgba(var(--color-text-primary-rgb), 0.1)' }} className="backdrop-blur-md border p-3 rounded-xl shadow-xl shadow-black/50">
+        <p className="text-[var(--color-text-muted)] text-xs mb-1">{label}</p>
+        <p className="text-[var(--color-success)] font-bold text-lg">
           ${payload[0].value?.toLocaleString()}
         </p>
       </div>
@@ -119,21 +119,21 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               <defs>
                 {/* The "Neon Glow" Gradient */}
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--color-success)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-success)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               
               <CartesianGrid 
                 strokeDasharray="3 3" 
-                stroke="#ffffff" 
+                stroke="var(--color-text-primary)" 
                 opacity={0.05} 
                 vertical={false} 
               />
               
               <XAxis 
                 dataKey="name" 
-                stroke="#6b7280" 
+                stroke="var(--color-text-muted)" 
                 fontSize={12} 
                 tickLine={false} 
                 axisLine={false}
@@ -141,7 +141,7 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               />
               
               <YAxis 
-                stroke="#6b7280" 
+                stroke="var(--color-text-muted)" 
                 fontSize={12} 
                 tickLine={false} 
                 axisLine={false} 
@@ -150,20 +150,20 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               
               <Tooltip 
                 content={<CustomTooltip />} 
-                cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }}
+                cursor={{ stroke: 'var(--color-success)', strokeWidth: 1, strokeDasharray: '4 4' }}
               />
               
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="#10b981" // Emerald-500
+                stroke="var(--color-success)" // Emerald-500
                 strokeWidth={3}
                 fillOpacity={1}
                 fill="url(#colorValue)"
                 activeDot={{ 
                   r: 6, 
-                  fill: '#000000', // Black center
-                  stroke: '#10b981', // Neon border
+                  fill: 'var(--color-bg-primary)', // Black center
+                  stroke: 'var(--color-success)', // Neon border
                   strokeWidth: 3 
                 }}
               />
@@ -179,21 +179,21 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               <defs>
                 {/* The "Neon Glow" Gradient */}
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--color-success)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-success)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               
               <CartesianGrid 
                 strokeDasharray="3 3" 
-                stroke="#ffffff" 
+                stroke="var(--color-text-primary)" 
                 opacity={0.05} 
                 vertical={false} 
               />
               
               <XAxis 
                 dataKey="name" 
-                stroke="#6b7280" 
+                stroke="var(--color-text-muted)" 
                 fontSize={12} 
                 tickLine={false} 
                 axisLine={false}
@@ -201,7 +201,7 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               />
               
               <YAxis 
-                stroke="#6b7280" 
+                stroke="var(--color-text-muted)" 
                 fontSize={12} 
                 tickLine={false} 
                 axisLine={false} 
@@ -210,20 +210,20 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
               
               <Tooltip 
                 content={<CustomTooltip />} 
-                cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }}
+                cursor={{ stroke: 'var(--color-success)', strokeWidth: 1, strokeDasharray: '4 4' }}
               />
               
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="#10b981" // Emerald-500
+                stroke="var(--color-success)" // Emerald-500
                 strokeWidth={3}
                 fillOpacity={1}
                 fill="url(#colorValue)"
                 activeDot={{ 
                   r: 6, 
-                  fill: '#000000', // Black center
-                  stroke: '#10b981', // Neon border
+                  fill: 'var(--color-bg-primary)', // Black center
+                  stroke: 'var(--color-success)', // Neon border
                   strokeWidth: 3 
                 }}
               />
@@ -233,7 +233,7 @@ export function BalanceHistoryChart({ data: propData = DATA, walletName = 'Balan
       </div>
 
       {/* Footer Stats */}
-      <div className="pt-6 border-t border-white/5 flex items-center gap-6 text-sm text-[var(--color-text-muted)]">
+      <div className="pt-6 flex items-center gap-6 text-sm text-[var(--color-text-muted)]" style={{ borderTopColor: 'rgba(var(--color-text-primary-rgb), 0.05)', borderTopWidth: 1, borderTopStyle: 'solid' }}>
         <div>
           <div className="text-xs text-gray-400">Highest</div>
           <div className="font-medium text-white">{formatCurrency(max)}</div>

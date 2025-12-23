@@ -59,7 +59,7 @@ export default function useTypewriter(
     }
 
     return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [text, isDeleting, index, words, typeSpeed, deleteSpeed, pause, loop])
 
   return {

@@ -138,7 +138,7 @@ export class PaymentServiceClient implements IPaymentServiceClient {
         }
       } catch (e) {
         // don't let header-setting break requests
-        // eslint-disable-next-line no-console
+         
         console.warn('[PaymentServiceClient] failed to set auth header', e);
       }
       return cfg;
@@ -273,7 +273,7 @@ export function getPaymentServiceClient(config?: ApiConfig): IPaymentServiceClie
   
   if (useMocks) {
     // Lazy load mock client to avoid bundling in production
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const { MockPaymentServiceClient } = require('./mockPaymentClient');
     defaultClient = new MockPaymentServiceClient();
   } else {

@@ -1,270 +1,217 @@
 /* ============================================
    REGISTER PAGE
    Route: /register
-============================================ */
+   ============================================ */
 
 'use client'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { getUserServiceClient } from '@/lib/userServiceClient'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useRegister } from '@/hooks/api'
+import { useToast } from '@/providers'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Eye, EyeOff, Loader2, Check, X } from 'lucide-react'
+
+// Password validation rules
+const passwordRules = [
+  { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
+  { label: 'One uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
+  { label: 'One lowercase letter', test: (p: string) => /[a-z]/.test(p) },
+  { label: 'One number', test: (p: string) => /\d/.test(p) },
+]
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { success, error: showError } = useToast()
+  const registerMutation = useRegister()
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
-  }
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const passwordsMatch = password === confirmPassword && password.length > 0
+  const allRulesPass = passwordRules.every((rule) => rule.test(password))
+  const isFormValid = firstName && lastName && email && phoneNumber && allRulesPass && passwordsMatch
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-    if (form.password.length < 8) {
-      setError('Password must be at least 8 characters')
-      return
-    }
 
-    setLoading(true)
+    if (!isFormValid) return
+
     try {
-      const client = getUserServiceClient()
-      await client.register({
-        email: form.email,
-        password: form.password,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        phone: form.phone,
+      await registerMutation.mutateAsync({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
       })
+      success('Account created!', 'Welcome to XuPay. You are now logged in.')
       router.push('/dashboard')
-    } catch (err: any) {
-      setError(err.message || 'Đăng ký thất bại. Vui lòng thử lại.')
-    } finally {
-      setLoading(false)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Registration failed. Please try again.'
+      showError('Registration Failed', message)
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-8">
-      {/* Logo + title */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-            <svg
-              className="w-6 h-6 text-white"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </div>
-          <span className="text-xl font-bold text-gray-900">SmartSave</span>
-        </div>
-
-        <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-        <p className="text-sm text-gray-500">
-          Create an account to get started
-        </p>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* name row */}
-        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-3">
+    <Card className="border-border/50 shadow-xl">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
+        <CardDescription className="text-center">
+          Fill in your details to get started
+        </CardDescription>
+      </CardHeader>
+      
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              First Name
-            </label>
-            <input
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              className="w-full px-3 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="John"
+            <Label htmlFor="fullName">Full Name</Label>
+            <Input
+              id="fullName"
+              type="text"
+              placeholder="John Doe"
+              value={`${firstName} ${lastName}`}
+              onChange={(e) => {
+                const [first, ...last] = e.target.value.split(' ')
+                setFirstName(first)
+                setLastName(last.join(' '))
+              }}
               required
+              autoComplete="name"
+              className="bg-muted/50"
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <input
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              className="w-full px-3 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Doe"
-              required
-            />
-          </div>
-        </div>
 
-        {/* Email */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            Email Address
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </span>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
               type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="you@example.com"
+              placeholder="john@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
+              className="bg-muted/50"
             />
           </div>
-        </div>
 
-        {/* Phone */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            Phone Number
-          </label>
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            className="w-full px-3 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            placeholder="+84 912 345 678"
-          />
-        </div>
-
-        {/* Password */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full px-3 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            placeholder="Enter your password"
-            required
-          />
-        </div>
-
-        {/* Confirm */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            className="w-full px-3 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            placeholder="Confirm your password"
-            required
-          />
-        </div>
-
-        {/* Terms */}
-        <label className="flex items-start gap-2 text-xs sm:text-sm text-gray-600">
-          <input
-            type="checkbox"
-            required
-            className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-500"
-          />
-          <span>
-            I agree to the{' '}
-            <span className="font-medium text-blue-500">Terms of Service</span>{' '}
-            and{' '}
-            <span className="font-medium text-blue-500">Privacy Policy</span>.
-          </span>
-        </label>
-
-        {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs sm:text-sm text-red-600">
-            {error}
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              required
+              autoComplete="tel"
+              className="bg-muted/50"
+            />
           </div>
-        )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Creating account…' : 'Create Account'}
-        </button>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                className="bg-muted/50 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            
+            {/* Password Rules */}
+            {password && (
+              <ul className="mt-2 space-y-1">
+                {passwordRules.map((rule) => {
+                  const passes = rule.test(password)
+                  return (
+                    <li
+                      key={rule.label}
+                      className={`flex items-center gap-2 text-xs ${passes ? 'text-xupay-success' : 'text-muted-foreground'}`}
+                    >
+                      {passes ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      {rule.label}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                className="bg-muted/50 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {confirmPassword && !passwordsMatch && (
+              <p className="text-xs text-xupay-error">Passwords do not match</p>
+            )}
+          </div>
+        </CardContent>
+
+        <CardFooter className="flex flex-col gap-4">
+          <Button
+            type="submit"
+            className="w-full bg-xupay-primary hover:bg-xupay-primary/90"
+            disabled={!isFormValid || registerMutation.isPending}
+          >
+            {registerMutation.isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Creating account...
+              </>
+            ) : (
+              'Create account'
+            )}
+          </Button>
+
+          <p className="text-sm text-center text-muted-foreground">
+            Already have an account?{' '}
+            <Link href="/login" className="text-xupay-primary hover:underline font-medium">
+              Sign in
+            </Link>
+          </p>
+        </CardFooter>
       </form>
-
-      {/* divider + social + link */}
-      <div className="space-y-3">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-xs text-gray-500">
-              Or Sign Up With
-            </span>
-          </div>
-        </div>
-
-        <div className="flex justify-center gap-3">
-          <button className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white hover:bg-gray-50">
-            G
-          </button>
-          <button className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-black text-white hover:bg-gray-900">
-            
-          </button>
-          <button className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-[#1877F2] text-white hover:bg-blue-600">
-            f
-          </button>
-        </div>
-      </div>
-
-      <p className="text-center text-xs sm:text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link
-          href="/login"
-          className="font-semibold text-blue-500 hover:text-blue-600"
-        >
-          Sign in
-        </Link>
-      </p>
-    </div>
+    </Card>
   )
 }

@@ -26,13 +26,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     <aside
       className={`
         fixed top-0 left-0 z-50 h-screen w-64
-        bg-[#0a0a0a]/95 backdrop-blur-xl border-r border-white/5
+        backdrop-blur-xl
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}
+      `} style={{ backgroundColor: 'rgba(var(--color-bg-primary-rgb), 0.95)', borderRightColor: 'rgba(var(--color-text-primary-rgb), 0.05)', borderRightWidth: 1, borderRightStyle: 'solid' } }
     >
       {/* Sidebar Header */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-white/5">
+      <div className="h-16 flex items-center justify-between px-6" style={{ borderBottomColor: 'rgba(var(--color-text-primary-rgb), 0.05)', borderBottomWidth: 1, borderBottomStyle: 'solid' }}>
         <Link href="/dashboard" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
             <Wallet className="w-5 h-5 text-emerald-400" />
@@ -86,7 +86,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       </nav>
 
       {/* Bottom User Section (Optional) */}
-      <div className="absolute bottom-0 w-full p-4 border-t border-white/5">
+      <div className="absolute bottom-0 w-full p-4" style={{ borderTopColor: 'rgba(var(--color-text-primary-rgb), 0.05)', borderTopWidth: 1, borderTopStyle: 'solid' }}>
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 transition-colors cursor-pointer">
           <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-xs">
             JD
