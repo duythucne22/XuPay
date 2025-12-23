@@ -13,7 +13,7 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
   return (
     <>
       {/* Introducing Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-black to-[#0a0a15] relative overflow-hidden z-10">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] relative overflow-hidden z-10">
         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
           backgroundImage: `repeating-linear-gradient(0deg, rgba(var(--color-primary-rgb),0.18) 0px, rgba(var(--color-primary-rgb),0.18) 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, rgba(var(--color-primary-rgb),0.18) 0px, rgba(var(--color-primary-rgb),0.18) 1px, transparent 1px, transparent 40px)`
         }} />
@@ -49,7 +49,7 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(90deg, var(--color-success), var(--color-success-light))' }}>
             Foundational Pillars
           </h2>
-          <div className="mx-auto max-w-5xl bg-[rgba(var(--color-bg-secondary),0.02)] border border-[rgba(var(--color-primary-rgb),0.04)] rounded-2xl p-6 mt-8">
+          <div className="mx-auto max-w-5xl bg-[rgba(var(--color-bg-secondary-rgb),0.02)] border border-[rgba(var(--color-primary-rgb),0.04)] rounded-2xl p-6 mt-8">
             <div
               className="grid gap-8 justify-center items-stretch"
               style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 320px))' }}
@@ -71,7 +71,7 @@ export default function FeaturesGrid({ companyName }: FeaturesGridProps) {
       </section>
 
       {/* Wealth Management */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#0a0a15] to-black relative overflow-hidden z-10">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)] relative overflow-hidden z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}

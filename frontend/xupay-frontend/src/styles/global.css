@@ -99,6 +99,11 @@
   --color-warning-rgb: var(--color-neon-yellow-rgb);
   --color-info-rgb: var(--color-neon-purple-rgb);
 
+  /* Background & text RGB tokens for opacity helpers */
+  --color-bg-primary-rgb: 2, 6, 23;     /* #020617 */
+  --color-bg-secondary-rgb: 15, 23, 42; /* #0f172a */
+  --color-text-primary-rgb: 248, 250, 252; /* #f8fafc */
+
   /* ============================================
      TYPOGRAPHY SCALE - ENHANCED FOR READABILITY
      ============================================ */

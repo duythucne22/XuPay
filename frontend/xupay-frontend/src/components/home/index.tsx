@@ -27,7 +27,7 @@ export default function HomePageContent({
       <ParticleBackground />
       
       {/* Gradient Overlay */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-br from-[#0a0a0a] to-[#1a1a2e] opacity-90 pointer-events-none" />
+      <div className="fixed inset-0 z-0 bg-gradient-to-br from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)] opacity-90 pointer-events-none" />
       
       {/* Main Content */}
       <div className="relative z-10">

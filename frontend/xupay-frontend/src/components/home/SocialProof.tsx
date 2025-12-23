@@ -46,7 +46,7 @@ export default function SocialProof() {
       </section>
 
       {/* Partners */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#0a0a15] to-black relative overflow-hidden z-10">
+      <section className="py-20 px-4 bg-gradient-to-b from-[var(--color-bg-secondary)] to-[var(--color-bg-primary)] relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto relative z-10 text-center">
           <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
             Trusted by Industry Leaders
