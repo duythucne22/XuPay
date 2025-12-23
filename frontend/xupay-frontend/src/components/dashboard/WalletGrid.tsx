@@ -64,7 +64,7 @@ export function WalletGrid({
 }: WalletGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
@@ -95,7 +95,7 @@ export function WalletGrid({
 
   return (
     <StaggerContainer className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-6">
         {wallets.map((wallet) => {
           const typeInfo = WALLET_TYPE_INFO[wallet.type]
           const isDisabled = wallet.status !== 'active'

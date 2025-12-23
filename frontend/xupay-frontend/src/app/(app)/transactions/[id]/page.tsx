@@ -90,7 +90,7 @@ export default function TransactionDetailPage({ params }: TransactionDetailPageP
             {/* Basic Info */}
             <div>
               <h3 className="font-semibold mb-4">Basic Information</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Type</p>
                   <p className="font-medium">{getTransactionTypeLabel(transaction.type)}</p>
@@ -115,7 +115,7 @@ export default function TransactionDetailPage({ params }: TransactionDetailPageP
             <Separator />
 
             {/* From/To Details */}
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 max-md:grid-cols-1 gap-6">
               {/* From */}
               <div>
                 <h3 className="font-semibold mb-4">From</h3>
@@ -180,7 +180,7 @@ export default function TransactionDetailPage({ params }: TransactionDetailPageP
             {/* Additional Info */}
             <div>
               <h3 className="font-semibold mb-4">Additional Information</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Description</p>
                   <p className="font-medium">{transaction.description || 'N/A'}</p>
@@ -211,7 +211,7 @@ export default function TransactionDetailPage({ params }: TransactionDetailPageP
             {/* Fraud Detection */}
             <div>
               <h3 className="font-semibold mb-4">Fraud Detection</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Fraud Score</p>
                   <div className="flex items-center gap-2">

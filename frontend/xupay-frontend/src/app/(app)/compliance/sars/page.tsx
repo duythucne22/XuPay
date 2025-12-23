@@ -84,7 +84,7 @@ export default function SARsPage() {
       />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4">
         {[
           { label: 'Total SARs', value: stats.total, color: 'bg-blue-50' },
           { label: 'Open', value: stats.open, color: 'bg-red-50' },
@@ -116,7 +116,7 @@ export default function SARsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Severity</label>
               <select

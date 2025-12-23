@@ -297,9 +297,9 @@ export default function TransactionsPage() {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="space-y-4"
       >
-        {/* Date and Wallet Filters */}
-        <div className="flex flex-row gap-4">
-          <div className="relative flex-1">
+        {/* Filters Grid - Desktop: 4 cols, Mobile: 1 col */}
+        <div className="grid grid-cols-4 max-md:grid-cols-1 gap-4">
+          <div className="relative">
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
@@ -313,7 +313,7 @@ export default function TransactionsPage() {
             </select>
           </div>
 
-          <div className="relative flex-1">
+          <div className="relative">
             <select
               value={walletFilter}
               onChange={(e) => setWalletFilter(e.target.value)}
@@ -325,44 +325,33 @@ export default function TransactionsPage() {
               <option value="Savings">Savings Wallet</option>
             </select>
           </div>
-        </div>
 
-        {/* Type Filter Buttons */}
-        <div className="flex flex-wrap gap-2">
-          {(['all', 'sent', 'received', 'fee', 'refund'] as const).map((filter) => (
-            <motion.button
-              key={filter}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setTypeFilter(filter)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                typeFilter === filter
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-              }`}
+          <div className="relative">
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value as any)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </motion.button>
-          ))}
-        </div>
+              <option value="all">All types</option>
+              <option value="sent">Sent</option>
+              <option value="received">Received</option>
+              <option value="fee">Fee</option>
+              <option value="refund">Refund</option>
+            </select>
+          </div>
 
-        {/* Status Filter Buttons */}
-        <div className="flex flex-wrap gap-2">
-          {(['all', 'completed', 'pending', 'failed'] as const).map((filter) => (
-            <motion.button
-              key={filter}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setStatusFilter(filter)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                statusFilter === filter
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-              }`}
+          <div className="relative">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </motion.button>
-          ))}
+              <option value="all">All statuses</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -381,12 +370,12 @@ export default function TransactionsPage() {
         </div>
       </motion.div>
 
-      {/* Desktop Table View */}
+      {/* Desktop Table View - Hidden on mobile/tablet, visible on desktop */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="block"
+        className="hidden lg:block"
       >
         <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
           {/* Table Header */}
@@ -455,12 +444,12 @@ export default function TransactionsPage() {
         </div>
       </motion.div>
 
-      {/* Mobile Card View */}
+      {/* Mobile Card View - Visible on mobile/tablet, hidden on desktop */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="hidden"
+        className="lg:hidden"
       >
         <StaggerContainer className="w-full">
           {paginatedTransactions.map((tx) => (

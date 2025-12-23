@@ -68,3 +68,30 @@ export {
   useFileSar,
   useDismissSar,
 } from './useSars'
+
+// Dashboard hooks (PHASE 1 PR 6)
+export {
+  dashboardKeys,
+  useDashboardOverview,
+  type DashboardKPI,
+  type DashboardChartData,
+  type DashboardTransaction,
+  type DashboardOverview,
+} from './useDashboard'
+
+// Analytics hooks (PHASE 1 PR 6)
+export {
+  analyticsKeys,
+  useAnalyticsOverview,
+  type AnalyticsKPI,
+  type AnalyticsChartData,
+  type AnalyticsData,
+} from './useAnalytics'
+
+// Audit hooks (PHASE 1 PR 6)
+export {
+  auditKeys,
+  useAuditLog,
+  type AuditLogEntry,
+  type AuditLogResponse,
+} from './useAuditLog'

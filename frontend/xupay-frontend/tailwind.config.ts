@@ -119,6 +119,63 @@ const config: Config = {
         'ease-out': 'var(--easing-ease-out)',
         'ease-in': 'var(--easing-ease-in)',
       },
+      /* PHASE 1: PR 6 - Layout Extensions */
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: 'var(--container-padding-x)',
+          sm: '1rem',
+          md: '1.5rem',
+          lg: '2rem',
+        },
+        screens: {
+          sm: '640px',
+          md: '768px',
+          lg: '1024px',
+          xl: '1280px',
+          '2xl': '1536px',
+        },
+      },
+      width: {
+        sidebar: 'var(--sidebar-width)',
+        'sidebar-sm': 'var(--sidebar-width-sm)',
+      },
+      height: {
+        topbar: 'var(--topbar-height)',
+      },
+      gap: {
+        'grid-default': 'var(--grid-gap-default)',
+        'grid-compact': 'var(--grid-gap-compact)',
+        'grid-loose': 'var(--grid-gap-loose)',
+      },
+      gridTemplateColumns: {
+        '12': 'repeat(12, minmax(0, 1fr))',
+        'dashboard': '1fr 2fr 1fr',
+        'wallets': 'repeat(auto-fill, minmax(300px, 1fr))',
+        'kpi-mobile': '1fr',
+        'kpi-tablet': 'repeat(2, 1fr)',
+        'kpi-desktop': 'repeat(4, 1fr)',
+        'transaction-summary': 'repeat(auto-fit, minmax(200px, 1fr))',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+        'pulse-soft': 'pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
+      },
     },
   },
   plugins: [],

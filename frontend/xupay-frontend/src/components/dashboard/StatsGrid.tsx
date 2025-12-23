@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { StaggerContainer, itemVariants } from '@/components/animations'
 import { StatCard } from '@/components/dashboard/StatCard'
+import Grid from '@/components/layout/Grid'
 import {
   DollarSign,
   TrendingUp,
@@ -49,7 +50,7 @@ export function StatsGrid() {
 
   return (
     <StaggerContainer className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <Grid cols={1} md={2} lg={4} gap={6}>
         {stats.map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -66,7 +67,7 @@ export function StatsGrid() {
             />
           </motion.div>
         ))}
-      </div>
+      </Grid>
     </StaggerContainer>
   )
 }

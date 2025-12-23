@@ -40,6 +40,10 @@ export function UserMenu() {
       <div className="flex items-center gap-2 px-2 py-1.5">
         <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
         <div className="space-y-1">
+          <div className="h-4 w-20 bg-muted rounded animate-pulse" />
+          <div className="h-3 w-16 bg-muted rounded animate-pulse" />
+        </div>
+      </div>
     )
   }
 

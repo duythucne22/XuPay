@@ -277,7 +277,7 @@ export default function WalletDetailPage({ params }: WalletDetailPageProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                     Total Transactions

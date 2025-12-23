@@ -1,24 +1,14 @@
+﻿/* ============================================
+   XuPay GLOBAL STYLES
+   ============================================ */
+
+/* Tailwind directives MUST come first */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Canonical global styles (tokens, typography, utilities, animations) */
-@import '../styles/global.css';
-
-/* Keep a minimal shadcn/theme mapping so components that rely on these variables continue to work.
-   Map our design-token names to the expected shadcn names. */
-@custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
-
-@theme inline {
-  --background: var(--color-bg-primary);
-  --foreground: var(--color-text-primary);
-  --font-sans: var(--font-family-sans);
-  --font-mono: var(--font-family-mono);
-  --color-xupay-primary: var(--color-primary);
-  --color-xupay-success: var(--color-success);
-  --color-xupay-danger: var(--color-danger);
-  --color-xupay-warning: var(--color-warning);
-  --color-border: var(--color-border-default);
-  --color-input: var(--color-border-default);
-  --color-ring: var(--shadow-neon-teal);
-}
+/* Import custom CSS variables and animations after Tailwind */
+@import '../styles/variables.css';
+@import '../styles/animations.css';
+/* TODO: Fix CSS layer issues with src/styles/global.css */
+/* @import '../styles/global.css'; */

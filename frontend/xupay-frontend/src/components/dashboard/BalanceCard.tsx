@@ -106,9 +106,6 @@ export function BalanceCard({ walletId, title = 'Balance', onLoadingChange }: Ba
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-gray-600 dark:text-gray-300 font-semibold text-sm">{title}</h3>
-          {balance?.walletType && (
-            <div className="text-xs text-gray-500 dark:text-gray-400">{balance.walletType}</div>
-          )}
         </div>
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}

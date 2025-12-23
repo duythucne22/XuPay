@@ -722,3 +722,111 @@ label {
   margin-bottom: var(--space-2);
   display: block;
 }
+
+/* ============================================
+   LAYOUT DIMENSIONS (PHASE 1: PR 6)
+   ============================================ */
+
+:root {
+  /* Container System */
+  --container-max-width: 1280px;     /* max-w-7xl */
+  --container-padding-x: 1.5rem;     /* px-6 */
+  --container-padding-y: 2rem;       /* py-8 */
+  
+  /* Sidebar Dimensions */
+  --sidebar-width: 16rem;            /* w-64 */
+  --sidebar-width-sm: 0;             /* hidden on mobile */
+  --sidebar-transition: 300ms;       /* smooth toggle */
+  
+  /* Topbar Dimensions */
+  --topbar-height: 4rem;             /* h-16 */
+  
+  /* Grid Gaps */
+  --grid-gap-default: 1.5rem;        /* gap-6 */
+  --grid-gap-compact: 1rem;          /* gap-4 */
+  --grid-gap-loose: 2rem;            /* gap-8 */
+  
+  /* Responsive Breakpoints (Tailwind standard) */
+  --bp-mobile: 0;                    /* <640px */
+  --bp-tablet: 640px;                /* 640-1024px */
+  --bp-desktop: 1024px;              /* ≥1024px */
+}
+
+/* ============================================
+   CARD DESIGN SYSTEM (PHASE 1: PR 6)
+   ============================================ */
+
+@layer components {
+  .card-base {
+    @apply bg-white border border-gray-200 rounded-xl p-6 
+           dark:bg-slate-900 dark:border-slate-700 
+           transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:shadow-lg hover:border-gray-300 
+           dark:hover:border-slate-600 cursor-pointer;
+  }
+
+  .card-interactive {
+    @apply card-base card-hover;
+  }
+}
+
+/* ============================================
+   TABLE DESIGN SYSTEM (PHASE 1: PR 6)
+   ============================================ */
+
+@layer components {
+  .table-sticky-header {
+    @apply sticky top-0 bg-gray-50 dark:bg-slate-800 
+           z-10 border-b border-gray-200 dark:border-slate-700;
+  }
+
+  .table-cell-base {
+    @apply px-4 py-3 text-sm text-gray-900 dark:text-slate-100;
+  }
+
+  .table-row-hover {
+    @apply hover:bg-gray-50 dark:hover:bg-slate-800/50 
+           transition-colors duration-150;
+  }
+}
+
+/* ============================================
+   BADGE DESIGN SYSTEM (PHASE 1: PR 6)
+   ============================================ */
+
+@layer components {
+  .badge-base {
+    @apply inline-flex items-center rounded-full px-3 py-1 
+           text-xs font-semibold uppercase;
+  }
+}
+
+@layer components {
+  .badge-success {
+    @apply badge-base bg-green-100 text-green-800 
+           dark:bg-green-900/30 dark:text-green-200;
+  }
+
+  .badge-warning {
+    @apply badge-base bg-yellow-100 text-yellow-800 
+           dark:bg-yellow-900/30 dark:text-yellow-200;
+  }
+
+  .badge-danger {
+    @apply badge-base bg-red-100 text-red-800 
+           dark:bg-red-900/30 dark:text-red-200;
+  }
+
+  .badge-info {
+    @apply badge-base bg-blue-100 text-blue-800 
+           dark:bg-blue-900/30 dark:text-blue-200;
+  }
+
+  .badge-default {
+    @apply badge-base bg-gray-100 text-gray-800 
+           dark:bg-gray-800 dark:text-gray-200;
+  }
+}

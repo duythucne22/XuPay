@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Mail, Phone, MapPin, Shield, Lock, Bell, Eye, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { useProfile } from '@/hooks/api/useProfile.new'
+import { useMyProfile } from '@/hooks/api/useProfile.new'
 import { useRouter } from 'next/navigation'
 
 interface ProfileForm {
@@ -12,25 +12,17 @@ interface ProfileForm {
   lastName: string
   email: string
   phone: string
-  address: string
-  city: string
-  country: string
-  postalCode: string
 }
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { data: profile, isLoading, error } = useProfile()
+  const { data: profile, isLoading, error } = useMyProfile()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState<ProfileForm>({
     firstName: profile?.firstName || '',
     lastName: profile?.lastName || '',
     email: profile?.email || '',
     phone: profile?.phone || '',
-    address: profile?.address || '',
-    city: profile?.city || '',
-    country: profile?.country || '',
-    postalCode: profile?.postalCode || '',
   })
 
   const containerVariants = {
@@ -138,7 +130,7 @@ export default function ProfilePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-6">
             {/* First Name */}
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -168,7 +160,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Email */}
-            <div className="col-span-2">
+            <div className="col-span-2 max-md:col-span-1">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <Mail size={16} /> Email Address
               </label>
@@ -182,7 +174,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Phone */}
-            <div className="col-span-2">
+            <div className="col-span-2 max-md:col-span-1">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <Phone size={16} /> Phone Number
               </label>
@@ -191,56 +183,6 @@ export default function ProfilePage() {
                 value={formData.phone}
                 disabled={!isEditing}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white disabled:opacity-50"
-              />
-            </div>
-
-            {/* Address */}
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-                <MapPin size={16} /> Street Address
-              </label>
-              <input
-                type="text"
-                value={formData.address}
-                disabled={!isEditing}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white disabled:opacity-50"
-              />
-            </div>
-
-            {/* City */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">City</label>
-              <input
-                type="text"
-                value={formData.city}
-                disabled={!isEditing}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white disabled:opacity-50"
-              />
-            </div>
-
-            {/* Country */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Country</label>
-              <input
-                type="text"
-                value={formData.country}
-                disabled={!isEditing}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white disabled:opacity-50"
-              />
-            </div>
-
-            {/* Postal Code */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Postal Code</label>
-              <input
-                type="text"
-                value={formData.postalCode}
-                disabled={!isEditing}
-                onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white disabled:opacity-50"
               />
             </div>

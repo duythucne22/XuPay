@@ -10,7 +10,7 @@ interface StatCardProps {
   // Backwards-compatible props
   label?: string
   title?: string
-  value: string
+  value: string | number
   unit?: string
   isLoading?: boolean
   color?: ColorKey
